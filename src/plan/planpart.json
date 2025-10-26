@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Icon": "calligraplan",
+        "MimeTypes": [
+            "application/x-vnd.kde.plan",
+            "application/x-vnd.kde.kplato",
+            "application/x-planner"
+        ],
+        "Name": "Calligra Project Management Component",
+        "ServiceTypes": [
+            "Calligra/Part"
+        ]
+    },
+    "MimeType": "application/x-vnd.kde.plan;application/x-vnd.kde.kplato;application/x-planner",
+    "X-KDE-NativeMimeType": "application/x-vnd.kde.plan",
+    "X-PLAN-Documentation": "plan:calligraplan;portfolio:calligraplanportfolio;work:calligraplanwork;"
+}

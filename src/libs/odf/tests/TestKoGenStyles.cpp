@@ -14,7 +14,6 @@
 #include <KoXmlWriter.h>
 #include <OdfDebug.h>
 #include <QBuffer>
-#include <QRegExp>
 
 #include <QTest>
 
@@ -32,7 +31,6 @@
             writer.endElement(); \
             writer.endDocument(); \
         } \
-        buffer.putChar('\0'); /*null-terminate*/ \
         QString expectedFull = QString::fromLatin1("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); \
         expectedFull += expected; \
         QString s1 = QString::fromLatin1(cstr); \
@@ -45,9 +43,9 @@ void TestKoGenStyles::testLookup()
     debugOdf ;
     KoGenStyles coll;
 
-    QMap<QString, QString> map1;
+    QMultiMap<QString, QString> map1;
     map1.insert(QStringLiteral("map1key"), QStringLiteral("map1value"));
-    QMap<QString, QString> map2;
+    QMultiMap<QString, QString> map2;
     map2.insert(QStringLiteral("map2key1"), QStringLiteral("map2value1"));
     map2.insert(QStringLiteral("map2key2"), QStringLiteral("map2value2"));
 

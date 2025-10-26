@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Icon": "",
+        "Name": "Plan iCalendar Export Filter",
+        "ServiceTypes": [
+            "Plan/Filter"
+        ]
+    },
+    "X-KDE-Export": [
+        "text/calendar"
+    ],
+    "X-KDE-Import": [
+        "application/x-vnd.kde.plan"
+    ],
+    "X-KDE-Weight": 1
+}

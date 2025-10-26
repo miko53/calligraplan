@@ -158,7 +158,7 @@ public:
                 if (!requiredList.isEmpty()) {
                     QDomElement e = projectElement.ownerDocument().createElement(QStringLiteral("required-resources"));
                     projectElement.appendChild(e);
-                    for (const std::pair<QString, QString> &pair : qAsConst(requiredList)) {
+                    for (const std::pair<QString, QString> &pair : std::as_const(requiredList)) {
                         QDomElement re = e.ownerDocument().createElement(QStringLiteral("required-resource"));
                         e.appendChild(re);
                         re.setAttribute(QStringLiteral("resource-id"), pair.first);
@@ -225,8 +225,7 @@ public:
             if (!required.isEmpty()) {
                 QDomElement reqs = projectElement.ownerDocument().createElement(QStringLiteral("required-resource-requests"));
                 projectElement.appendChild(reqs);
-                QHash<Task*, std::pair<ResourceRequest*, Resource*> >::const_iterator it;
-                for (it = required.constBegin(); it != required.constEnd(); ++it) {
+                for (auto it = required.constBegin(); it != required.constEnd(); ++it) {
                     QDomElement req = reqs.ownerDocument().createElement(QStringLiteral("required-resource-request"));
                     reqs.appendChild(req);
                     req.setAttribute(QStringLiteral("task-id"), it.key()->id());
@@ -238,8 +237,7 @@ public:
             if (!alternativeRequests.isEmpty()) {
                 QDomElement reqs = projectElement.ownerDocument().createElement(QStringLiteral("alternative-requests"));
                 projectElement.appendChild(reqs);
-                QHash<Task*, std::pair<ResourceRequest*, ResourceRequest*> >::const_iterator it;
-                for (it = alternativeRequests.constBegin(); it != alternativeRequests.constEnd(); ++it) {
+                for (auto it = alternativeRequests.constBegin(); it != alternativeRequests.constEnd(); ++it) {
                     QDomElement req = reqs.ownerDocument().createElement(QStringLiteral("alternative-request"));
                     reqs.appendChild(req);
                     req.setAttribute(QStringLiteral("task-id"), it.key()->id());

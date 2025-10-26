@@ -119,17 +119,17 @@ void Project::deref()
 Project::~Project()
 {
     disconnect();
-    for(Node *n : qAsConst(nodeIdDict)) {
+    for(Node *n : std::as_const(nodeIdDict)) {
         n->blockChanged();
     }
-    for (Resource *r : qAsConst(m_resources)) {
+    for (Resource *r : std::as_const(m_resources)) {
         r->blockChanged();
     }
-    for (ResourceGroup *g : qAsConst(resourceGroupIdDict)) {
+    for (ResourceGroup *g : std::as_const(resourceGroupIdDict)) {
         g->blockChanged();
     }
     delete m_standardWorktime;
-    for (Resource *r : qAsConst(m_resources)) {
+    for (Resource *r : std::as_const(m_resources)) {
         delete r;
     }
     while (!m_resourceGroups.isEmpty())
@@ -486,7 +486,7 @@ void Project::finishCalculation(ScheduleManager &sm)
         // calculate project duration
         cs->startTime = m_constraintEndTime;
         cs->endTime = m_constraintStartTime;
-        for (const Node *n : qAsConst(nodeIdDict)) {
+        for (const Node *n : std::as_const(nodeIdDict)) {
             cs->startTime = qMin(cs->startTime, n->startTime(cs->id()));
             cs->endTime = qMax(cs->endTime, n->endTime(cs->id()));
         }
@@ -800,7 +800,7 @@ void Project::tasksForward()
     }
 #ifndef PLAN_NLOGDEBUG
     debugPlan<<"End nodes:"<<m_terminalNodes;
-    for (Node* n : qAsConst(m_terminalNodes)) {
+    for (Node* n : std::as_const(m_terminalNodes)) {
         QList<Node*> lst;
         QList<Relation*> rel;
         Q_ASSERT(checkParent(n, lst, rel)); Q_UNUSED(n);
@@ -849,7 +849,7 @@ void Project::tasksBackward()
     }
 #ifndef PLAN_NLOGDEBUG
     debugPlan<<"Start nodes:"<<m_terminalNodes;
-    for (Node* n : qAsConst(m_terminalNodes)) {
+    for (Node* n : std::as_const(m_terminalNodes)) {
         QList<Node*> lst;
         QList<Relation*> rel;
         Q_ASSERT(checkChildren(n, lst, rel)); Q_UNUSED(n);
@@ -874,7 +874,7 @@ DateTime Project::calculateForward(int use)
             // setup tasks
             tasksForward();
             if (!m_priorityNodes.isEmpty()) {
-                for (Node *n : qAsConst(m_priorityNodes)) {
+                for (Node *n : std::as_const(m_priorityNodes)) {
                     cs->logDebug(QStringLiteral("Calculate task '%1' by priority: %2").arg(n->name()).arg(n->priority()));
                     DateTime time = n->calculateForward(use);
                     if (time > finish) {
@@ -885,7 +885,7 @@ DateTime Project::calculateForward(int use)
                 return finish;
             }
             // Do all hard constrained first
-            for (Node *n : qAsConst(m_hardConstraints)) {
+            for (Node *n : std::as_const(m_hardConstraints)) {
                 cs->logDebug(QStringLiteral("Calculate task with hard constraint: ") + n->name() + QStringLiteral(" : ") + n->constraintToString());
                 DateTime time = n->calculateEarlyFinish(use); // do not do predeccessors
                 if (time > finish) {
@@ -893,7 +893,7 @@ DateTime Project::calculateForward(int use)
                 }
             }
             // do the predeccessors
-            for (Node *n : qAsConst(m_hardConstraints)) {
+            for (Node *n : std::as_const(m_hardConstraints)) {
                 cs->logDebug(QStringLiteral("Calculate predeccessors to hard constrained task: ") + n->name() + QStringLiteral(" : ") + n->constraintToString());
                 DateTime time = n->calculateForward(use);
                 if (time > finish) {
@@ -901,7 +901,7 @@ DateTime Project::calculateForward(int use)
                 }
             }
             // now try to schedule soft constrained *with* predeccessors
-            for (Node *n : qAsConst(m_softConstraints)) {
+            for (Node *n : std::as_const(m_softConstraints)) {
                 cs->logDebug(QStringLiteral("Calculate task with soft constraint: ") + n->name() + QStringLiteral(" : ") + n->constraintToString());
                 DateTime time = n->calculateForward(use);
                 if (time > finish) {
@@ -909,7 +909,7 @@ DateTime Project::calculateForward(int use)
                 }
             }
             // and then the rest using the end nodes to calculate everything (remaining)
-            for (Task *n : qAsConst(m_terminalNodes)) {
+            for (Task *n : std::as_const(m_terminalNodes)) {
                 cs->logDebug(QStringLiteral("Calculate using end task: ") + n->name() + QStringLiteral(" : ") + n->constraintToString());
                 DateTime time = n->calculateForward(use);
                 if (time > finish) {
@@ -953,7 +953,7 @@ DateTime Project::calculateBackward(int use)
             // setup tasks
             tasksBackward();
             if (!m_priorityNodes.isEmpty()) {
-                for (Node *n : qAsConst(m_priorityNodes)) {
+                for (Node *n : std::as_const(m_priorityNodes)) {
                     cs->logDebug(QStringLiteral("Calculate task '%1' by priority: %2").arg(n->name()).arg(n->priority()));
                     DateTime time = n->calculateBackward(use);
                     if (! start.isValid() || time < start) {
@@ -963,7 +963,7 @@ DateTime Project::calculateBackward(int use)
                 return start;
             }
             // Do all hard constrained first
-            for (Task *n : qAsConst(m_hardConstraints)) {
+            for (Task *n : std::as_const(m_hardConstraints)) {
                 cs->logDebug(QStringLiteral("Calculate task with hard constraint: ") + n->name() + QStringLiteral(" : ") + n->constraintToString());
                 DateTime time = n->calculateLateStart(use); // do not do predeccessors
                 if (! start.isValid() || time < start) {
@@ -971,7 +971,7 @@ DateTime Project::calculateBackward(int use)
                 }
             }
             // then do the predeccessors
-            for (Task *n : qAsConst(m_hardConstraints)) {
+            for (Task *n : std::as_const(m_hardConstraints)) {
                 cs->logDebug(QStringLiteral("Calculate predeccessors to hard constrained task:" ) + n->name() + QStringLiteral(" : ") + n->constraintToString());
                 DateTime time = n->calculateBackward(use);
                 if (! start.isValid() || time < start) {
@@ -979,7 +979,7 @@ DateTime Project::calculateBackward(int use)
                 }
             }
             // now try to schedule soft constrained *with* predeccessors
-            for (Task *n : qAsConst(m_softConstraints)) {
+            for (Task *n : std::as_const(m_softConstraints)) {
                 cs->logDebug(QStringLiteral("Calculate task with soft constraint: ") + n->name() + QStringLiteral(" : ") + n->constraintToString());
                 DateTime time = n->calculateBackward(use);
                 if (! start.isValid() || time < start) {
@@ -987,7 +987,7 @@ DateTime Project::calculateBackward(int use)
                 }
             }
             // and then the rest using the start nodes to calculate everything (remaining)
-            for (Task *n : qAsConst(m_terminalNodes)) {
+            for (Task *n : std::as_const(m_terminalNodes)) {
                 cs->logDebug(QStringLiteral("Calculate using start task: ") + n->name() + QStringLiteral(" : ") + n->constraintToString());
                 DateTime time = n->calculateBackward(use);
                 if (! start.isValid() || time < start) {
@@ -1024,7 +1024,7 @@ DateTime Project::scheduleForward(const DateTime &earliest, int use)
     resetVisited();
 
     if (!m_priorityNodes.isEmpty()) {
-        for (Node *n : qAsConst(m_priorityNodes)) {
+        for (Node *n : std::as_const(m_priorityNodes)) {
             cs->logDebug(QStringLiteral("Schedule task '%1' by priority: %2").arg(n->name()).arg(n->priority()));
             DateTime time = n->scheduleForward(earliest, use);
             if (time > end) {
@@ -1037,7 +1037,7 @@ DateTime Project::scheduleForward(const DateTime &earliest, int use)
 
     // Schedule in the same order as calculated forward
     // Do all hard constrained first
-    for (Node *n : qAsConst(m_hardConstraints)) {
+    for (Node *n : std::as_const(m_hardConstraints)) {
         cs->logDebug(QStringLiteral("Schedule task with hard constraint: ") + n->name() + QStringLiteral(" : ") + n->constraintToString());
         DateTime time = n->scheduleFromStartTime(use); // do not do predeccessors
         if (time > end) {
@@ -1078,7 +1078,7 @@ DateTime Project::scheduleBackward(const DateTime &latest, int use)
     resetVisited();
     // Schedule in the same order as calculated backward
     // Do all hard constrained first
-    for (Node *n : qAsConst(m_hardConstraints)) {
+    for (Node *n : std::as_const(m_hardConstraints)) {
         cs->logDebug(QStringLiteral("Schedule task with hard constraint:") + n->name() + QStringLiteral(" : ") + n->constraintToString());
         DateTime time = n->scheduleFromEndTime(use); // do not do predeccessors
         if (! start.isValid() || time < start) {
@@ -1127,7 +1127,7 @@ void Project::initiateCalculation(MainSchedule &sch)
     while (git.hasNext()) {
         git.next() ->initiateCalculation(sch);
     }
-    for (Resource *r : qAsConst(m_resources)) {
+    for (Resource *r : std::as_const(m_resources)) {
         r->initiateCalculation(sch);
     }
 
@@ -1163,7 +1163,7 @@ void Project::saveSettings(QDomElement &element, const XmlSaveContext &context) 
     loc.setAttribute(QStringLiteral("currency-symbol"), l->currencySymbol());
     loc.setAttribute(QStringLiteral("currency-digits"), l->monetaryDecimalPlaces());
     loc.setAttribute(QStringLiteral("language"), l->currencyLanguage());
-    loc.setAttribute(QStringLiteral("country"), l->currencyCountry());
+    loc.setAttribute(QStringLiteral("country"), l->currencyTerritory());
 
     QDomElement share = settingsElement.ownerDocument().createElement(QStringLiteral("shared-resources"));
     settingsElement.appendChild(share);
@@ -1257,7 +1257,7 @@ void Project::save(QDomElement &element, const XmlSaveContext &context) const
         if (!m_resources.isEmpty() && !m_resourceGroups.isEmpty()) {
             QDomElement e = me.ownerDocument().createElement(QStringLiteral("resource-group-relations"));
             me.appendChild(e);
-            for (ResourceGroup *g : qAsConst(m_resourceGroups)) {
+            for (ResourceGroup *g : std::as_const(m_resourceGroups)) {
                 const auto resources = g->resources();
                 for (Resource *r : resources) {
                     QDomElement re = e.ownerDocument().createElement(QStringLiteral("resource-group-relation"));
@@ -1270,7 +1270,7 @@ void Project::save(QDomElement &element, const XmlSaveContext &context) const
         debugPlanXml<<"required-resources";
         if (m_resources.count() > 1) {
             QList<std::pair<QString, QString> > requiredList;
-            for (Resource *resource : qAsConst(m_resources)) {
+            for (Resource *resource : std::as_const(m_resources)) {
                 const auto requiredIds = resource->requiredIds();
                 for (const QString &required : requiredIds) {
                     requiredList << std::pair<QString, QString>(resource->id(), required);
@@ -1279,7 +1279,7 @@ void Project::save(QDomElement &element, const XmlSaveContext &context) const
             if (!requiredList.isEmpty()) {
                 QDomElement e = me.ownerDocument().createElement(QStringLiteral("required-resources"));
                 me.appendChild(e);
-                for (const std::pair<QString, QString> &pair : qAsConst(requiredList)) {
+                for (const std::pair<QString, QString> &pair : std::as_const(requiredList)) {
                     QDomElement re = e.ownerDocument().createElement(QStringLiteral("required-resource"));
                     e.appendChild(re);
                     re.setAttribute(QStringLiteral("resource-id"), pair.first);
@@ -1291,7 +1291,7 @@ void Project::save(QDomElement &element, const XmlSaveContext &context) const
         debugPlanXml<<"resource-teams";
         QDomElement el = me.ownerDocument().createElement(QStringLiteral("resource-teams"));
         me.appendChild(el);
-        for (Resource *r : qAsConst(m_resources)) {
+        for (Resource *r : std::as_const(m_resources)) {
             if (r->type() != Resource::Type_Team) {
                 continue;
             }
@@ -1314,7 +1314,7 @@ void Project::save(QDomElement &element, const XmlSaveContext &context) const
         if (!externals.isEmpty()) {
             QDomElement e = me.ownerDocument().createElement(QStringLiteral("external-appointments"));
             me.appendChild(e);
-            for (Resource *resource : qAsConst(externals)) {
+            for (Resource *resource : std::as_const(externals)) {
                 const QMap<QString, QString> projects = resource->externalProjects();
                 QMap<QString, QString>::const_iterator it;
                 for (it = projects.constBegin(); it != projects.constEnd(); ++it) {
@@ -1351,7 +1351,7 @@ void Project::save(QDomElement &element, const XmlSaveContext &context) const
         if (!m_managers.isEmpty()) {
             QDomElement el = me.ownerDocument().createElement(QStringLiteral("project-schedules"));
             me.appendChild(el);
-            for (ScheduleManager *sm : qAsConst(m_managers)) {
+            for (ScheduleManager *sm : std::as_const(m_managers)) {
                 sm->saveXML(el);
             }
         }
@@ -1370,8 +1370,7 @@ void Project::save(QDomElement &element, const XmlSaveContext &context) const
         if (!resources.isEmpty()) {
             QDomElement el = me.ownerDocument().createElement(QStringLiteral("resource-requests"));
             me.appendChild(el);
-            QHash<Task*, ResourceRequest*>::const_iterator it;
-            for (it = resources.constBegin(); it != resources.constEnd(); ++it) {
+            for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
                 if (!it.value()->resource()) {
                     continue;
                 }
@@ -1396,8 +1395,7 @@ void Project::save(QDomElement &element, const XmlSaveContext &context) const
         if (!required.isEmpty()) {
             QDomElement reqs = me.ownerDocument().createElement(QStringLiteral("required-resource-requests"));
             me.appendChild(reqs);
-            QHash<Task*, std::pair<ResourceRequest*, Resource*> >::const_iterator it;
-            for (it = required.constBegin(); it != required.constEnd(); ++it) {
+            for (auto it = required.constBegin(); it != required.constEnd(); ++it) {
                 QDomElement req = reqs.ownerDocument().createElement(QStringLiteral("required-resource-request"));
                 reqs.appendChild(req);
                 req.setAttribute(QStringLiteral("task-id"), it.key()->id());
@@ -1409,8 +1407,7 @@ void Project::save(QDomElement &element, const XmlSaveContext &context) const
         if (!alternativeRequests.isEmpty()) {
             QDomElement reqs = me.ownerDocument().createElement(QStringLiteral("alternative-requests"));
             me.appendChild(reqs);
-            QHash<Task*, std::pair<ResourceRequest*, ResourceRequest*> >::const_iterator it;
-            for (it = alternativeRequests.constBegin(); it != alternativeRequests.constEnd(); ++it) {
+            for (auto it = alternativeRequests.constBegin(); it != alternativeRequests.constEnd(); ++it) {
                 QDomElement req = reqs.ownerDocument().createElement(QStringLiteral("alternative-request"));
                 reqs.appendChild(req);
                 req.setAttribute(QStringLiteral("task-id"), it.key()->id());
@@ -1445,7 +1442,7 @@ void Project::saveWorkPackageXML(QDomElement &element, const Node *node, long id
     if (!assignedResources.isEmpty()) {
         auto resourcesElemente = me.ownerDocument().createElement(QStringLiteral("resources"));
         me.appendChild(resourcesElemente);
-        for (const auto r : qAsConst(m_resources)) {
+        for (const auto r : std::as_const(m_resources)) {
             if (assignedResources.contains(r)) {
                 r->save(resourcesElemente);
             }
@@ -1771,6 +1768,9 @@ bool Project::moveTask(Node* node, Node *newParent, int newPos)
     debugPlan<<node->name()<<"at"<<oldParent->indexOf(node)<<"to"<<newParent->name()<<i<<newRow<<"("<<newPos<<")";
     Q_EMIT nodeToBeMoved(node, oldPos, newParent, newRow);
     takeTask(node, false);
+    if (newPos == -1) {
+        i = newPos; // if inserted at the end (-1), update i since numChildren() could be modified and > to nb of children
+    }
     addSubTask(node, i, newParent, false);
     Q_EMIT nodeMoved(node);
     if (oldParent != this && oldParent->numChildren() == 0) {
@@ -1943,7 +1943,7 @@ Task *Project::createTask(const Task &def)
 
 void Project::allocateDefaultResources(Task *task) const
 {
-    for (const auto r : qAsConst(m_resources)) {
+    for (const auto r : std::as_const(m_resources)) {
         if (r->autoAllocate()) {
             task->requests().addResourceRequest(new ResourceRequest(r, 100));
         }
@@ -2012,7 +2012,7 @@ bool Project::registerNodeId(Node *node)
     if (rn == nullptr) {
         //debugPlan <<"id=" << node->id() << node->name();
         nodeIdDict.insert(node->id(), node);
-        connect(node, &QObject::destroyed, this, &Project::nodeDestroyed);
+        connect(node, &QObject::destroyed, this, &Project::nodeDestroyed, Qt::QueuedConnection);
         return true;
     }
     if (rn != node) {
@@ -2062,7 +2062,7 @@ QList<Task*> Project::allTasks(const Node *parent) const
 QList<Node*> Project::leafNodes() const
 {
     QList<Node*> lst;
-    for (const auto n : qAsConst(nodeIdDict)) {
+    for (const auto n : std::as_const(nodeIdDict)) {
         if (n != this && n->numChildren() == 0) {
             lst.append(n);
         }
@@ -2138,7 +2138,7 @@ void Project::removeResourceGroupFromProject(ResourceGroup *group)
 QList<Resource*> Project::autoAllocateResources() const
 {
     QList<Resource*> lst;
-    for (Resource *r : qAsConst(m_resources)) {
+    for (Resource *r : std::as_const(m_resources)) {
         if (r->autoAllocate()) {
             lst << r;
         }
@@ -2698,7 +2698,7 @@ QString Project::generateWBSCode(QList<int> &indexes, bool sortable) const
     if (sortable) {
         int fw = (nodeIdDict.count() / 10) + 1;
         QLatin1Char fc('0');
-        for (int index : qAsConst(indexes)) {
+        for (int index : std::as_const(indexes)) {
             code += QStringLiteral(".%1");
             code = code.arg(QString::number(index), fw, fc);
         }
@@ -2708,7 +2708,7 @@ QString Project::generateWBSCode(QList<int> &indexes, bool sortable) const
             code += m_wbsDefinition.projectSeparator();
         }
         int level = 1;
-        for (int index : qAsConst(indexes)) {
+        for (int index : std::as_const(indexes)) {
             code += m_wbsDefinition.code(index + 1, level);
             if (level < indexes.count()) {
                 // not last level, add separator also
@@ -2727,7 +2727,7 @@ void Project::setCurrentSchedule(long id)
     //debugPlan;
     setCurrentSchedulePtr(findSchedule(id));
     Node::setCurrentSchedule(id);
-    for (Resource *r : qAsConst(m_resources)) {
+    for (Resource *r : std::as_const(m_resources)) {
         r->setCurrentSchedule(id);
     }
     Q_EMIT currentScheduleChanged();
@@ -2745,7 +2745,7 @@ ScheduleManager *Project::currentScheduleManager() const
 
 ScheduleManager *Project::scheduleManager(long id) const
 {
-    for (ScheduleManager *sm : qAsConst(m_managers)) {
+    for (ScheduleManager *sm : std::as_const(m_managers)) {
         if (sm->scheduleId() == id) {
             return sm;
         }
@@ -2762,7 +2762,7 @@ ScheduleManager *Project::findScheduleManagerByName(const QString &name) const
 {
     //debugPlan;
     ScheduleManager *m = nullptr;
-    for (ScheduleManager *sm : qAsConst(m_managers)) {
+    for (ScheduleManager *sm : std::as_const(m_managers)) {
         m = sm->findManager(name);
         if (m) {
             break;
@@ -2774,7 +2774,7 @@ ScheduleManager *Project::findScheduleManagerByName(const QString &name) const
 QList<ScheduleManager*> Project::allScheduleManagers() const
 {
     QList<ScheduleManager*> lst;
-    for (ScheduleManager *sm : qAsConst(m_managers)) {
+    for (ScheduleManager *sm : std::as_const(m_managers)) {
         lst << sm;
         lst << sm->allChildren();
     }
@@ -2879,7 +2879,7 @@ bool Project::isScheduleManager(void *ptr) const
     if (indexOf(sm) >= 0) {
         return true;
     }
-    for (ScheduleManager *p : qAsConst(m_managers)) {
+    for (ScheduleManager *p : std::as_const(m_managers)) {
         if (p->isParentOf(sm)) {
             return true;
         }
@@ -2889,6 +2889,7 @@ bool Project::isScheduleManager(void *ptr) const
 
 ScheduleManager *Project::createScheduleManager(const QString &name, const ScheduleManager::Owner &creator)
 {
+    Q_UNUSED(creator);
     //debugPlan<<name;
     ScheduleManager *sm = new ScheduleManager(*this, name);
     return sm;

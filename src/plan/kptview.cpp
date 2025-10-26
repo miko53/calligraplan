@@ -146,7 +146,7 @@ View::View(KoPart *part, MainDocument *doc, QWidget *parent)
 
     m_sp = new QSplitter(this);
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(m_sp);
 
     ViewListDocker *docker = nullptr;
@@ -1451,7 +1451,7 @@ void View::slotCreateReportTemplate()
                     files.insert(url.fileName(), url);
                 }
             }
-            KConfigGroup cfgGrp(part->componentData().config(), "Report Templates");
+            KConfigGroup cfgGrp(part->componentData().config(), QStringLiteral("Report Templates"));
             if (cfgGrp.exists()) {
                 const auto templates = cfgGrp.readEntry(QStringLiteral("ReportTemplatePaths")).split(QLatin1Char(','));
                 for (auto &path : templates) {
@@ -2174,13 +2174,13 @@ void View::slotPopupMenuRequested(const QString& menuname, const QPoint & pos)
             debugPlan<<lst;
             if (! lst.isEmpty()) {
                 menu->addSeparator();
-                for (QAction *a : qAsConst(lst)) {
+                for (QAction *a : std::as_const(lst)) {
                     menu->addAction(a);
                 }
             }
         }
         menu->exec(pos);
-        for (QAction *a : qAsConst(lst)) {
+        for (QAction *a : std::as_const(lst)) {
             menu->removeAction(a);
         }
     }

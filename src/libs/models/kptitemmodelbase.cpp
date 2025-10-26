@@ -85,7 +85,7 @@ bool ItemDelegate::eventFilter(QObject *object, QEvent *event)
 
 QSize ItemDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-    // Decoration (like basline icon) increases height so check height of column 0 in case...
+    // Decoration (like baseline icon) increases height so check height of column 0 in case...
     QSize s = QStyledItemDelegate::sizeHint(option, index);
     return QSize(s.width(), qMax(s.height(), QStyledItemDelegate::sizeHint(option, index.sibling(index.row(), 0)).height()));
 }
@@ -737,7 +737,7 @@ void ItemModelBase::writeText(QMimeData *m, const QModelIndexList &indexes) cons
             cursor.insertText(indexes.at(i).data().toString());
             cursor.movePosition(QTextCursor::NextCell);
         }
-        m->setData(QStringLiteral("text/html"), doc.toHtml("utf-8").toUtf8());
+        m->setData(QStringLiteral("text/html"), doc.toHtml().toUtf8());
     }
     if (mimeTypes().contains(QStringLiteral("text/plain"))) {
         QVector<QStringList> text(rows+1);
@@ -753,7 +753,7 @@ void ItemModelBase::writeText(QMimeData *m, const QModelIndexList &indexes) cons
         }
         if (mimeTypes().contains(QStringLiteral("text/plain"))) {
             QString s;
-            for (const auto &t : qAsConst(text)) {
+            for (const auto &t : std::as_const(text)) {
                 s += t.join(QLatin1Char('\t'));
                 s += QLatin1Char('\n');
             }

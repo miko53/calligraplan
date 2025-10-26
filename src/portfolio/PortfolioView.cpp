@@ -111,7 +111,7 @@ PortfolioView::PortfolioView(KoPart *part, KoDocument *doc, QWidget *parent)
     if (mw) {
         KSharedConfigPtr configPtr = mw->componentData().config();
         KRecentFilesAction recent(QStringLiteral("x"), nullptr);
-        recent.loadEntries(configPtr->group("Recent Portfolios"));
+        recent.loadEntries(configPtr->group(QStringLiteral("Recent Portfolios")));
         m_recentProjects->setRecentFiles(recent);
     }
     connect(ui.recentPortfolios, &QAbstractItemView::activated, this, &PortfolioView::slotRecentFileActivated);
@@ -226,7 +226,7 @@ void PortfolioView::slotRemoveSelected()
             docs << doc;
         }
     }
-    for (KoDocument *doc : qAsConst(docs)) {
+    for (KoDocument *doc : std::as_const(docs)) {
         m->portfolio()->removeDocument(doc);
     }
 }

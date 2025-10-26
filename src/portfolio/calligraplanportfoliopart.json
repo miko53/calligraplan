@@ -1,0 +1,16 @@
+{
+    "KPlugin": {
+        "Icon": "calligraplanportfolio",
+        "MimeTypes": [
+            "application/x-vnd.kde.plan.portfolio"
+        ],
+        "Name": "CalligraPlanPortfolioPart",
+        "ServiceTypes": [
+            "KParts/ReadOnlyPart",
+            "KParts/ReadWritePart"
+        ]
+    },
+    "MimeType": "application/x-vnd.kde.plan.portfolio;",
+    "X-KDE-NativeMimeType": "application/x-vnd.kde.plan.portfolio",
+    "X-PLAN-Documentation": "plan:calligraplan;portfolio:calligraplanportfolio;work:calligraplanwork;"
+}

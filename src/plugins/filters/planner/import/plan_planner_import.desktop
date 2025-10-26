@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=Plan Planner Import Filter
+Name[ar]=مُرشِّح استيراد المُخطِط للمُخطِط
 Name[ca]=Filtre d'importació del Planner del Plan
 Name[ca@valencia]=Filtre d'importació de Planner de Plan
 Name[cs]=Importní filtr plánovaní Planner
@@ -13,6 +14,7 @@ Name[eu]=Plan-en Planner-retik inportatzeko iragazkia
 Name[fi]=Planin Planner-tuontisuodatin
 Name[fr]=Filtre d'importation Planner de Plan
 Name[gl]=Filtro para Plan de importación de Planner
+Name[he]=מסנן ייבוא מ־Planner לתכנון
 Name[id]=Filter Impor Planner Plan
 Name[it]=Filtro di importazione da Planner di Plan
 Name[ka]=Planner-დან გეგმის შემოტანის ფილტრი
@@ -26,7 +28,6 @@ Name[sl]=Plan uvozni filter za Planner
 Name[sv]=Plan planeringsimportfilter
 Name[tr]=Plan Planner İçe Aktarma Süzgeci
 Name[uk]=Фільтр імпортування даних Planner для Plan
-Name[x-test]=xxPlan Planner Import Filterxx
 Name[zh_CN]=Plan 计划工具导入过滤器
 Name[zh_TW]=Plan Planner 匯入過濾程式
 X-KDE-Export=application/x-vnd.kde.plan

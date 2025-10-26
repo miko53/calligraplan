@@ -158,7 +158,7 @@ void KoDialogPrivate::init(KoDialog *q)
     q->setButtons(KoDialog::Ok | KoDialog::Cancel);
     q->setDefaultButton(KoDialog::Ok);
 
-    q->connect(&mButtonSignalMapper, SIGNAL(mapped(int)), q, SLOT(slotButtonClicked(int)));
+    q->connect(&mButtonSignalMapper, &QSignalMapper::mappedInt, q, &KoDialog::slotButtonClicked);
 
     q->setPlainCaption(qApp->applicationDisplayName()); // set appropriate initial window title for case it gets not set later
 }
@@ -340,7 +340,7 @@ void KoDialog::setMainWidget(QWidget *widget)
     d->mMainWidget = widget;
     if (d->mMainWidget && d->mMainWidget->layout()) {
         // Avoid double-margin problem
-        d->mMainWidget->layout()->setMargin(0);
+        d->mMainWidget->layout()->setContentsMargins(0, 0, 0, 0);
     }
     d->setupLayout();
 }
@@ -507,7 +507,7 @@ void KoDialog::resizeLayout(QLayout *layout, int margin, int spacing)   //static
     }
 
     if (layout->layout()) {
-        layout->layout()->setMargin(margin);
+        layout->layout()->setContentsMargins(margin, margin, margin, margin);
         layout->layout()->setSpacing(spacing);
     }
 }

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=Plan KPlato Import Filter
+Name[ar]=مُرشِّح استيراد كِبلاتو للمُخطِط
 Name[ca]=Filtre d'importació del KPlato per al Plan
 Name[ca@valencia]=Filtre d'importació de KPlato per a Plan
 Name[de]=KPlato-Importfilter für Calligra Plan
@@ -12,6 +13,7 @@ Name[eu]=Plan-en KPlato-tik inportatzeko iragazkia
 Name[fi]=Planin KPlato-tuontisuodatin
 Name[fr]=Filtre d'importation KPlato de Plan
 Name[gl]=Filtro para Plan de importación de KPlato
+Name[he]=מסנן ייבוא מ־KPlato לתכנון
 Name[id]=Filter Impor KPlato Plan
 Name[it]=Filtro di importazione da KPlato di Plan
 Name[ka]=KPlato-დან გეგმის შემოტანის ფილტრი
@@ -25,7 +27,6 @@ Name[sl]=Plan uvozni filter za KPlato
 Name[sv]=Plan KPlato importfilter
 Name[tr]=Plan KPlato İçe Aktarma Süzgeci
 Name[uk]=Фільтр імпортування даних KPlato для Plan
-Name[x-test]=xxPlan KPlato Import Filterxx
 Name[zh_CN]=Plan KPlato 导入过滤器
 Name[zh_TW]=Plan KPlato 匯入過濾程式
 X-KDE-Export=application/x-vnd.kde.plan

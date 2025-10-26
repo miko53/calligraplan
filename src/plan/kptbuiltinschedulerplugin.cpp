@@ -153,7 +153,7 @@ void KPlatoScheduler::stopScheduling()
 void KPlatoScheduler::cancelScheduling(SchedulingContext &context)
 {
     context.cancelScheduling = true;
-    for (const auto doc : qAsConst(context.calculatedDocuments)) {
+    for (const auto doc : std::as_const(context.calculatedDocuments)) {
         doc->project()->stopcalculation = true;
         if (doc->project()->currentScheduleManager()) {
             doc->project()->currentScheduleManager()->setCalculationResult(KPlato::ScheduleManager::CalculationCanceled);
@@ -231,14 +231,14 @@ void KPlatoScheduler::schedule(SchedulingContext &context)
         return;
     }
     QHash<KoDocument*, KoDocument*> projectMap;
-    QMapIterator<int, KoDocument*> it(context.projects);
+    QMultiMapIterator<int, KoDocument*> it(context.projects);
     for (it.toBack(); it.hasPrevious();) {
         context.calculatedDocuments << copyDocument(it.previous().value());
         projectMap.insert(context.calculatedDocuments.last(), it.value());
     }
 
     int taskCount = 0;
-    for (const auto doc : qAsConst(context.calculatedDocuments)) {
+    for (const auto doc : std::as_const(context.calculatedDocuments)) {
         auto p = doc->project();
         connect(p, &KPlato::Project::sigProgress, this, &KPlato::KPlatoScheduler::slotProgress);
         taskCount += p->leafNodes().count();
@@ -254,7 +254,7 @@ void KPlatoScheduler::schedule(SchedulingContext &context)
     }
 
     auto includes = context.resourceBookings;
-    for (auto doc : qAsConst(context.calculatedDocuments)) {
+    for (auto doc : std::as_const(context.calculatedDocuments)) {
         calculateProject(context, doc, includes);
         if (!context.cancelScheduling) {
             includes << doc;
@@ -264,7 +264,7 @@ void KPlatoScheduler::schedule(SchedulingContext &context)
         takeLog();
         logWarning(context.project, nullptr, i18n("Scheduling canceled"));
     } else {
-        for (auto doc : qAsConst(context.calculatedDocuments)) {
+        for (auto doc : std::as_const(context.calculatedDocuments)) {
             mergeProject(doc->project(), projectMap.value(doc)->project());
             projectMap.value(doc)->setProperty(SCHEDULEMANAGERNAME, doc->property(SCHEDULEMANAGERNAME));
         }
@@ -322,7 +322,7 @@ void KPlatoScheduler::mergeProject(Project *calculatedProject, Project *original
             originalProject->addSchedule(sch);
             newManager->setExpected(sch);
         } else {
-            // re-calculating existing schedule, need to remove old schedule form tasks abd resources first
+            // re-calculating existing schedule, need to remove old schedule form tasks and resources first
             const auto tasks = originalProject->allNodes();
             for (auto t : tasks) {
                 if (t->type() == KPlato::Node::Type_Project) {

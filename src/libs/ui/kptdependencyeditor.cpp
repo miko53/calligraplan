@@ -663,6 +663,9 @@ void DependencyExpandItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void DependencyExpandItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
     const auto r = rect();
     if (!expanded) {
         painter->translate(r.width() * 0.4, r.height() * 0.5);
@@ -774,7 +777,7 @@ void DependencyNodeItem::setParentItem(DependencyNodeItem *parent)
 
 void DependencyNodeItem::setChildrenVisible(bool visible)
 {
-    for (DependencyNodeItem *ch : qAsConst(m_children)) {
+    for (DependencyNodeItem *ch : std::as_const(m_children)) {
         itemScene()->setItemVisible(ch, visible);
     }
 }
@@ -808,10 +811,10 @@ void DependencyNodeItem::setItemVisible(bool show)
 {
     setVisible(show);
     //debugPlanDepEditor<<isVisible()<<","<<node()->name();
-    for (DependencyLinkItem *i : qAsConst(m_parentrelations)) {
+    for (DependencyLinkItem *i : std::as_const(m_parentrelations)) {
         i->setItemVisible(show);
     }
-    for (DependencyLinkItem *i : qAsConst(m_childrelations)) {
+    for (DependencyLinkItem *i : std::as_const(m_childrelations)) {
         i->setItemVisible(show);
     }
     m_treeIndicator->setVisible(show);
@@ -866,10 +869,10 @@ void DependencyNodeItem::moveToY(qreal y)
     r. moveTop(y);
     setRectangle(r);
     //debugPlanDepEditor<<text()<<" move to="<<y<<" new pos:"<<rect();
-    for (DependencyLinkItem *i : qAsConst(m_parentrelations)) {
+    for (DependencyLinkItem *i : std::as_const(m_parentrelations)) {
         i->createPath();
     }
-    for (DependencyLinkItem *i : qAsConst(m_childrelations)) {
+    for (DependencyLinkItem *i : std::as_const(m_childrelations)) {
         i->createPath();
     }
     DependencyNodeItem *par = this;
@@ -895,10 +898,10 @@ void DependencyNodeItem::moveToX(qreal x)
     r. moveLeft(x);
     setRectangle(r);
     //debugPlanDepEditor<<m_text->toPlainText()<<" to="<<x<<" new pos:"<<rect();
-    for (DependencyLinkItem *i : qAsConst(m_parentrelations)) {
+    for (DependencyLinkItem *i : std::as_const(m_parentrelations)) {
         i->createPath();
     }
-    for (DependencyLinkItem *i : qAsConst(m_childrelations)) {
+    for (DependencyLinkItem *i : std::as_const(m_childrelations)) {
         i->createPath();
     }
     DependencyNodeItem *par = this;
@@ -912,16 +915,16 @@ void DependencyNodeItem::setColumn()
 {
     int col = m_parent == nullptr ? 0 : m_parent->column() + 1;
     //debugPlanDepEditor<<this<<text();
-    for (DependencyLinkItem *i : qAsConst(m_parentrelations)) {
+    for (DependencyLinkItem *i : std::as_const(m_parentrelations)) {
         col = qMax(col, i->newChildColumn());
     }
     if (col != column()) {
         setColumn(col);
-        for (DependencyLinkItem *i : qAsConst(m_childrelations)) {
+        for (DependencyLinkItem *i : std::as_const(m_childrelations)) {
             i->succItem->setColumn();
         }
         //debugPlanDepEditor<<m_children.count()<<"Column="<<column()<<","<<text();
-        for (DependencyNodeItem *i : qAsConst(m_children)) {
+        for (DependencyNodeItem *i : std::as_const(m_children)) {
             i->setColumn();
         }
     }
@@ -1014,7 +1017,7 @@ DependencyConnectorItem *DependencyNodeItem::connectorItem(ConnectorType ctype) 
 QList<DependencyLinkItem*> DependencyNodeItem::predecessorItems(ConnectorType ctype) const
 {
     QList<DependencyLinkItem*> lst;
-    for (DependencyLinkItem *i : qAsConst(m_parentrelations)) {
+    for (DependencyLinkItem *i : std::as_const(m_parentrelations)) {
         if (ctype == Start && (i->relation->type() == Relation::StartStart || i->relation->type() == Relation::FinishStart)) {
             lst << i;
         }
@@ -1028,7 +1031,7 @@ QList<DependencyLinkItem*> DependencyNodeItem::predecessorItems(ConnectorType ct
 QList<DependencyLinkItem*> DependencyNodeItem::successorItems(ConnectorType ctype) const
 {
     QList<DependencyLinkItem*> lst;
-    for (DependencyLinkItem *i : qAsConst(m_childrelations)) {
+    for (DependencyLinkItem *i : std::as_const(m_childrelations)) {
         if (ctype == Start && i->relation->type() == Relation::StartStart) {
             lst << i;
         }
@@ -1048,7 +1051,7 @@ qreal DependencyNodeItem::treeIndicatorX() const
 void DependencyNodeItem::setTreeIndicator(bool on)
 {
     paintTreeIndicator(on);
-    for (DependencyNodeItem *i : qAsConst(m_children)) {
+    for (DependencyNodeItem *i : std::as_const(m_children)) {
         if (i->isVisible()) {
             i->setTreeIndicator(on);
         }
@@ -1512,7 +1515,7 @@ void DependencyScene::itemToBeRemoved(DependencyNodeItem *item, DependencyNodeIt
         m_allItems.removeAll(item);
         m_hiddenItems.remove(m_hiddenItems.key(item));
         m_visibleItems.remove(m_visibleItems.key(item));
-        for (DependencyNodeItem *i : qAsConst(m_visibleItems)) {
+        for (DependencyNodeItem *i : std::as_const(m_visibleItems)) {
             if (i->row() > item->row()) {
                 i->setRow(i->row() - 1);
             } else if (i->row() == item->row() - 1) {
@@ -1528,7 +1531,7 @@ void DependencyScene::itemToBeRemoved(DependencyNodeItem *item, DependencyNodeIt
 
 void DependencyScene::createLinks()
 {
-    for (DependencyNodeItem *i : qAsConst(m_allItems)) {
+    for (DependencyNodeItem *i : std::as_const(m_allItems)) {
         createLinks(i);
     }
 }
@@ -1723,7 +1726,7 @@ DependencyNodeItem *DependencyScene::nodeItem(int row) const
     if (row < 0 || m_visibleItems.isEmpty()) {
         return nullptr;
     }
-    for (DependencyNodeItem *i : qAsConst(m_visibleItems)) {
+    for (DependencyNodeItem *i : std::as_const(m_visibleItems)) {
         if (i->row() == row) {
             return i;
         }
@@ -2209,7 +2212,7 @@ DependencyEditor::DependencyEditor(KoPart *part, KoDocument *doc, QWidget *paren
     setupGui();
 
     QVBoxLayout * l = new QVBoxLayout(this);
-    l->setMargin(0);
+    l->setContentsMargins(0, 0, 0, 0);
     m_view = new DependencyView(this);
     l->addWidget(m_view);
 
@@ -2477,7 +2480,7 @@ void DependencyEditor::updateActionsEnabled(bool on)
         return;
     }
     if (!m_currentnode) {
-        // alow adding to project
+        // allow adding to project
         menuAddTask->setEnabled(true);
         actionAddTask->setEnabled(true);
         actionAddMilestone->setEnabled(true);
@@ -2548,7 +2551,7 @@ void DependencyEditor::setupGui()
     connect(actionDeleteRelation, &QAction::triggered, this, &DependencyEditor::slotDeleteRelation);
 
     actionLinkTask  = new QAction(koIcon("link"), xi18nc("@action", "Link"), this);
-    actionCollection()->setDefaultShortcut(actionLinkTask, Qt::CTRL + Qt::Key_L);
+    actionCollection()->setDefaultShortcut(actionLinkTask, Qt::CTRL | Qt::Key_L);
     actionCollection()->addAction(QStringLiteral("link_task"), actionLinkTask);
     connect(actionLinkTask, &QAction::triggered, this, &DependencyEditor::slotLinkTask);
 
@@ -2557,12 +2560,12 @@ void DependencyEditor::setupGui()
     connect(menuAddTask, &QAction::triggered, this, &DependencyEditor::slotAddTask);
 
     actionAddTask  = new QAction(i18n("Add Task..."), this);
-    actionAddTask->setShortcut(Qt::CTRL + Qt::Key_I);
+    actionAddTask->setShortcut(Qt::CTRL | Qt::Key_I);
     connect(actionAddTask, &QAction::triggered, this, &DependencyEditor::slotAddTask);
     menuAddTask->addAction(actionAddTask);
 
     actionAddMilestone  = new QAction(i18n("Add Milestone..."), this);
-    actionAddMilestone->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_I);
+    actionAddMilestone->setShortcut(Qt::CTRL | Qt::ALT | Qt::Key_I);
     connect(actionAddMilestone, &QAction::triggered, this, &DependencyEditor::slotAddMilestone);
     menuAddTask->addAction(actionAddMilestone);
 
@@ -2572,12 +2575,12 @@ void DependencyEditor::setupGui()
     connect(menuAddSubTask, &QAction::triggered, this, &DependencyEditor::slotAddSubtask);
 
     actionAddSubtask  = new QAction(i18n("Add Sub-Task..."), this);
-    actionAddSubtask->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_I);
+    actionAddSubtask->setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_I);
     connect(actionAddSubtask, &QAction::triggered, this, &DependencyEditor::slotAddSubtask);
     menuAddSubTask->addAction(actionAddSubtask);
 
     actionAddSubMilestone = new QAction(i18n("Add Sub-Milestone..."), this);
-    actionAddSubMilestone->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::ALT + Qt::Key_I);
+    actionAddSubMilestone->setShortcut(Qt::CTRL | Qt::SHIFT | Qt::ALT | Qt::Key_I);
     connect(actionAddSubMilestone, &QAction::triggered, this, &DependencyEditor::slotAddSubMilestone);
     menuAddSubTask->addAction(actionAddSubMilestone);
 

@@ -17,12 +17,10 @@
 #include <kptcalendar.h>
 #include <kptappointment.h>
 
-#include <QTextCodec>
 #include <QByteArray>
 #include <QString>
 #include <QTextStream>
 #include <QFile>
-#include <QXmlInputSource>
 #include <QDomElement>
 #include <QDebug>
 
@@ -35,10 +33,11 @@
 
 using namespace KPlato;
 
-#define PLANNERIMPORT_LOG "calligra.plan.filter.planner.import"
-#define debugPlannerImport qCDebug(QLoggingCategory(PLANNERIMPORT_LOG))<<Q_FUNC_INFO
-#define warnPlannerImport qCWarning(QLoggingCategory(PLANNERIMPORT_LOG))
-#define errorPlannerImport qCCritical(QLoggingCategory(PLANNERIMPORT_LOG))
+Q_LOGGING_CATEGORY(plannerImportLog, "calligra.plan.filter.planner.import")
+
+#define debugPlannerImport qCDebug(plannerImportLog)<<Q_FUNC_INFO
+#define warnPlannerImport qCWarning(plannerImportLog)
+#define errorPlannerImport qCCritical(plannerImportLog)
 
 #define forEachChildElementWithTag(elem, parent, tag) \
 for (QDomNode _node = parent.firstChild(); !_node.isNull(); _node = _node.nextSibling()) \

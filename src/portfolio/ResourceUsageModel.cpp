@@ -59,7 +59,7 @@ int ResourceUsageModel::columnCount(const QModelIndex &parent) const
     }
     const auto dates = m_usage.keys();
     const auto tasks = m_usage.value(dates.at(0)).keys();
-    return std::max(tasks.count(), 1);
+    return std::max(tasks.count(), qsizetype(1));
 }
 
 
@@ -337,7 +337,7 @@ void ResourceUsageModel::updateData()
         // initiate m_usage
         for (int i = 0; i < size; ++i) {
             const auto date(startDate.addDays(i));
-            for (auto t : qAsConst(tasks)) {
+            for (auto t : std::as_const(tasks)) {
                 m_usage[date].insert(t->name(), std::pair<KPlato::Node*, double>(t, (double)0.0));
             }
         }
@@ -380,7 +380,7 @@ void ResourceUsageModel::updateData()
         // Remove tasks not used by this resource
         QMap<QDate, QMap<QString, std::pair<KPlato::Node*, double>>>::iterator it;
         for (it = m_usage.begin(); it != m_usage.end(); ++it) {
-            for (auto task : qAsConst(tasks)) {
+            for (auto task : std::as_const(tasks)) {
                 it.value().remove(task->name());
             }
         }

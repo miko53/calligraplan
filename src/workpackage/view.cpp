@@ -32,6 +32,7 @@
 #include <QPointer>
 #include <QMenu>
 #include <QAction>
+#include <QActionGroup>
 
 #include <KLocalizedString>
 #include <KToolBar>
@@ -274,13 +275,13 @@ void View::slotPopupMenu(const QString& name, const QPoint & pos)
         debugPlanWork<<lst;
         if (! lst.isEmpty()) {
             menu->addSeparator();
-            for (QAction *a : qAsConst(lst)) {
+            for (QAction *a : std::as_const(lst)) {
                 menu->addAction(a);
             }
         }
     }
     menu->exec(pos);
-    for (QAction *a : qAsConst(lst)) {
+    for (QAction *a : std::as_const(lst)) {
         menu->removeAction(a);
     }
 }

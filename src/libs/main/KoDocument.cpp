@@ -42,11 +42,17 @@
 
 #include <KFileItem>
 #include <KoNetAccess.h>
+#include <KLazyLocalizedString>
 #include <KLocalizedString>
 #include <MainDebug.h>
 #include <KConfigGroup>
 #include <KIO/Job>
+#include <KIO/FileCopyJob>
+#include <KIO/StatJob>
+#define HAVE_KDIRNOTIFY __has_include(<KDirNotify>)
+#if HAVE_KDIRNOTIFY
 #include <KDirNotify>
+#endif
 #include <KBackup>
 
 #include <QMimeDatabase>
@@ -410,7 +416,9 @@ public:
         }
         else
         {
+#if HAVE_KDIRNOTIFY
             ::org::kde::KDirNotify::emitFilesAdded(QUrl::fromLocalFile(m_url.adjusted(QUrl::RemoveFilename|QUrl::StripTrailingSlash).path()));
+#endif
 
             m_uploadJob = nullptr;
             document->setModified(false);
@@ -452,7 +460,7 @@ KoDocument::KoDocument(KoPart *parent, KUndo2Stack *undoStack)
     d->undoStack = undoStack;
     d->undoStack->setParent(this);
 
-    KConfigGroup cfgGrp(d->parentPart->componentData().config(), "Undo");
+    KConfigGroup cfgGrp(d->parentPart->componentData().config(), QStringLiteral("Undo"));
     d->undoStack->setUndoLimit(cfgGrp.readEntry("UndoLimit", 1000));
 
     connect(d->undoStack, &KUndo2QStack::indexChanged, this, &KoDocument::slotUndoStackIndexChanged);
@@ -632,7 +640,6 @@ bool KoDocument::saveFile()
     if (ret) {
         KNotification *notify = new KNotification(QStringLiteral("DocumentSaved"));
         notify->setText(i18n("Document <i>%1</i> saved", url().url()));
-        notify->addContext(QStringLiteral("url"), url().url());
         QTimer::singleShot(0, notify, &KNotification::sendEvent);
     }
 
@@ -1536,7 +1543,6 @@ bool KoDocument::openFile()
 
         KNotification *notify = new KNotification(QStringLiteral("DocumentLoaded"));
         notify->setText(i18n("Document <i>%1</i> loaded", url().url()));
-        notify->addContext(QStringLiteral("url"), url().url());
         QTimer::singleShot(0, notify, &KNotification::sendEvent);
     }
 
@@ -1829,7 +1835,6 @@ bool KoDocument::loadNativeFormatFromStoreInternal(KoStore *store)
     if (oasis && store->hasFile("VersionList.xml")) {
         KNotification *notify = new KNotification(QStringLiteral("DocumentHasVersions"));
         notify->setText(i18n("Document <i>%1</i> contains several versions. Go to File->Versions to open an old version.", store->urlOfStore().url()));
-        notify->addContext(QStringLiteral("url"), store->urlOfStore().url());
         QTimer::singleShot(0, notify, &KNotification::sendEvent);
 
         KoXmlDocument versionInfo;
@@ -2238,13 +2243,13 @@ bool KoDocument::hasExternURL() const
 
 static const struct {
     const char *localName;
-    const char *documentType;
+    KLazyLocalizedString documentType;
 } TN2DTArray[] = {
-    { "text", I18N_NOOP("a word processing") },
-    { "spreadsheet", I18N_NOOP("a spreadsheet") },
-    { "presentation", I18N_NOOP("a presentation") },
-    { "chart", I18N_NOOP("a chart") },
-    { "drawing", I18N_NOOP("a drawing") }
+    { "text", kli18n("a word processing") },
+    { "spreadsheet", kli18n("a spreadsheet") },
+    { "presentation", kli18n("a presentation") },
+    { "chart", kli18n("a chart") },
+    { "drawing", kli18n("a drawing") }
 };
 static const unsigned int numTN2DT = sizeof(TN2DTArray) / sizeof(*TN2DTArray);
 
@@ -2252,7 +2257,7 @@ QString KoDocument::tagNameToDocumentType(const QString& localName)
 {
     for (unsigned int i = 0 ; i < numTN2DT ; ++i)
         if (localName == QString::fromLatin1(TN2DTArray[i].localName))
-            return i18n(TN2DTArray[i].documentType);
+            return TN2DTArray[i].documentType.toString();
     return localName;
 }
 

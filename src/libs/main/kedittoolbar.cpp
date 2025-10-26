@@ -40,11 +40,8 @@
 
 #include "ktoolbarhelper_p.h"
 
-static const char separatorstring[] = I18N_NOOP("--- separator ---");
-static const char spacerstring[] = I18N_NOOP("--- expanding spacer ---");
-
-#define SEPARATORSTRING i18n(separatorstring)
-#define SPACERSTRING i18n(spacerstring)
+static const KLocalizedString separatorstring = ki18n("--- separator ---");
+static const KLocalizedString spacerstring = ki18n("--- expanding spacer ---");
 
 // static const char *const s_XmlTypeToString[] = { "Shell", "Part", "Local", "Merged" };
 
@@ -902,7 +899,7 @@ void KEditToolBarWidgetPrivate::initFromFactory(KXMLGUIFactory *factory, const Q
 void KEditToolBarWidget::save()
 {
     // qDebug(240) << "KEditToolBarWidget::save";
-    for (const auto &xmlFile : qAsConst(d->m_xmlFiles)) {
+    for (const auto &xmlFile : std::as_const(d->m_xmlFiles)) {
         // let's not save non-modified files
         if (!xmlFile.m_isModified) {
             continue;
@@ -1170,7 +1167,7 @@ void KEditToolBarWidgetPrivate::loadToolBarCombo(const QString &defaultToolBar)
     int defaultToolBarId = -1;
     int count = 0;
     // load in all of the toolbar names into this combo box
-    for (const auto &xmlFile : qAsConst(m_xmlFiles)) {
+    for (const auto &xmlFile : std::as_const(m_xmlFiles)) {
         // skip the merged one in favor of the local one,
         // so that we can change icons
         // This also makes the app-defined named for "mainToolBar" appear rather than the ui_standards-defined name.
@@ -1179,7 +1176,7 @@ void KEditToolBarWidgetPrivate::loadToolBarCombo(const QString &defaultToolBar)
         }
 
         // each xml file may have any number of toolbars
-        for (const auto &bar : qAsConst(xmlFile.barList())) {
+        for (const auto &bar : std::as_const(xmlFile.barList())) {
             const QString text = xmlFile.toolBarText(bar);
             m_toolbarCombo->addItem(text);
             const QString name = bar.attribute(attrName);
@@ -1242,14 +1239,14 @@ void KEditToolBarWidgetPrivate::loadActions(const QDomElement &elem)
         if (it.tagName() == tagSeparator) {
             ToolBarItem *act = new ToolBarItem(m_activeList, tagSeparator, sep_name.arg(sep_num++), QString());
             act->setSeparator(true);
-            act->setText(SEPARATORSTRING);
+            act->setText(separatorstring.toString());
             it.setAttribute(attrName, act->internalName());
             continue;
         }
         if (it.tagName() == tagSpacer) {
             ToolBarItem *act = new ToolBarItem(m_activeList, tagSpacer, spacer_name.arg(spacer_num++), QString());
             act->setSpacer(true);
-            act->setText(SPACERSTRING);
+            act->setText(spacerstring.toString());
             it.setAttribute(attrName, act->internalName());
             continue;
         }
@@ -1314,12 +1311,12 @@ void KEditToolBarWidgetPrivate::loadActions(const QDomElement &elem)
     // finally, add default separators and spacers to the inactive list
     ToolBarItem *sep = new ToolBarItem(nullptr, tagSeparator, sep_name.arg(sep_num++), QString());
     sep->setSeparator(true);
-    sep->setText(SEPARATORSTRING);
+    sep->setText(separatorstring.toString());
     m_inactiveList->insertItem(0, sep);
 
     ToolBarItem *spacer = new ToolBarItem(nullptr, tagSpacer, spacer_name.arg(spacer_num++), QString());
     spacer->setSpacer(true);
-    spacer->setText(SPACERSTRING);
+    spacer->setText(spacerstring.toString());
     m_inactiveList->insertItem(1, spacer);
 }
 
@@ -1597,7 +1594,7 @@ void KEditToolBarWidgetPrivate::updateLocal(QDomElement &elem)
 
         xmlFile.m_isModified = true;
         const QLatin1String attrName("name");
-        for (const auto &bar : qAsConst(xmlFile.barList())) {
+        for (const auto &bar : std::as_const(xmlFile.barList())) {
             const QString name(bar.attribute(attrName));
             const QString tag(bar.tagName());
             if ((tag != elem.tagName()) || (name != elem.attribute(attrName))) {

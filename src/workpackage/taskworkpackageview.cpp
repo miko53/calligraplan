@@ -318,7 +318,7 @@ TaskWorkPackageView::TaskWorkPackageView(Part *part, QWidget *parent)
 {
     debugPlanWork<<"-------------------- creating TaskWorkPackageView -------------------";
     QVBoxLayout * l = new QVBoxLayout(this);
-    l->setMargin(0);
+    l->setContentsMargins(0, 0, 0, 0);
     m_view = new TaskWorkPackageTreeView(part, this);
     l->addWidget(m_view);
     setupGui();
@@ -462,7 +462,8 @@ GanttItemDelegate::GanttItemDelegate(QObject *parent)
     showSchedulingError = false;
     showStatus = true;
 
-    QLinearGradient b(0., 0., 0., QApplication::fontMetrics().height());
+    QFontMetricsF metrics(QApplication::font());
+    QLinearGradient b(0., 0., 0., metrics.height());
     b.setColorAt(0., Qt::green);
     b.setColorAt(1., Qt::darkGreen);
     m_brushes.insert(Brush_Normal, QBrush(b));
@@ -871,7 +872,7 @@ TaskWPGanttView::TaskWPGanttView(Part *part, QWidget *parent)
 {
     debugPlanWork<<"-------------------- creating TaskWPGanttView -------------------";
     QVBoxLayout * l = new QVBoxLayout(this);
-    l->setMargin(0);
+    l->setContentsMargins(0, 0, 0, 0);
     m_view = new GanttView(part, this);
     l->addWidget(m_view);
 

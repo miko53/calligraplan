@@ -163,7 +163,7 @@ ReportView::ReportView(KoPart *part, KoDocument *doc, QWidget *parent)
     setObjectName("ReportView");
 
     QLayout *l = new QHBoxLayout(this);
-    l->setMargin(0);
+    l->setContentsMargins(0, 0, 0, 0);
     m_stack = new QStackedWidget(this);
     l->addWidget(m_stack);
 
@@ -295,7 +295,7 @@ ReportWidget::ReportWidget(KoPart *part, KoDocument *doc, QWidget *parent)
     m_reportScene->setBackgroundBrush(palette().brush(QPalette::Dark));
 
     QVBoxLayout *l = new QVBoxLayout(this);
-    l->setMargin(0);
+    l->setContentsMargins(0, 0, 0, 0);
     l->addWidget(m_reportView);
     m_pageSelector = new ReportNavigator(this);
     l->addWidget(m_pageSelector);
@@ -634,7 +634,7 @@ ReportDesigner::ReportDesigner(KoPart *part, KoDocument *doc, QWidget *parent)
     m_groupsectioneditor(new GroupSectionEditor(this))
 {
     QVBoxLayout *l = new QVBoxLayout(this);
-    l->setMargin(0);
+    l->setContentsMargins(0, 0, 0, 0);
     m_scrollarea = new QScrollArea(this);
     l->addWidget(m_scrollarea);
 
@@ -929,7 +929,7 @@ void ReportDesigner::setReportData(const QString &tag)
 QStandardItemModel *ReportDesigner::createSourceModel(QObject *parent) const
 {
     QStandardItemModel *m = new QStandardItemModel(parent);
-    for (ReportData *r : qAsConst(m_reportdatamodels)) {
+    for (ReportData *r : std::as_const(m_reportdatamodels)) {
         if (r->isMainDataSource()) {
             QStandardItem *item = new QStandardItem(r->sourceName());
             item->setData(r->objectName(), Reports::TagRole);
@@ -1165,7 +1165,7 @@ void GroupSectionEditor::slotMoveRowUp()
     if (rows.isEmpty() || rows.first() == 0) {
         return;
     }
-    for (int row : qAsConst(rows)) {
+    for (int row : std::as_const(rows)) {
         QList<QStandardItem*> items = model.takeRow(row);
         KReportDesignerSectionDetailGroup *g = sd->groupSection(row);
         bool showgh = g->groupHeaderVisible();

@@ -2,6 +2,7 @@
 Type=ServiceType
 X-KDE-ServiceType=Plan/Filter
 Comment=Calligra Filter
+Comment[ar]=مُرشِّح كاليغرا
 Comment[ca]=Filtre del Calligra
 Comment[ca@valencia]=Filtre de Calligra
 Comment[cs]=Filtr Calligra
@@ -14,6 +15,7 @@ Comment[eu]=Calligra iragazkia
 Comment[fi]=Calligra-suodatin
 Comment[fr]=Filtres pour Calligra
 Comment[gl]=Filtro para Calligra.
+Comment[he]=מסנן Calligra
 Comment[ia]=Filtro de Calligra
 Comment[id]=Filter Calligra
 Comment[it]=Filtro di Calligra
@@ -28,7 +30,6 @@ Comment[sl]=Calligra filter
 Comment[sv]=Calligra-filter
 Comment[tr]=Calligra Süzgeç
 Comment[uk]=Фільтр Calligra
-Comment[x-test]=xxCalligra Filterxx
 Comment[zh_CN]=Calligra 过滤器
 Comment[zh_TW]=Calligra 過濾器
 

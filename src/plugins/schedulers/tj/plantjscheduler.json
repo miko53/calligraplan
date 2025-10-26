@@ -1,0 +1,9 @@
+{
+    "KPlugin": {
+        "Description": "The TaskJuggler scheduler",
+        "Name": "TJ Scheduler",
+        "ServiceTypes": [
+            "Plan/SchedulerPlugin"
+        ]
+    }
+}

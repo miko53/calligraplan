@@ -22,6 +22,7 @@
 
 #include <KConfigGroup>
 #include <KRecentFilesAction>
+#include <KUrlCompletion>
 
 #include <QAction>
 #include <QStringList>
@@ -223,7 +224,8 @@ void WelcomeView::slotRecentFileSelected(const QModelIndex &idx)
 {
     if (idx.isValid()) {
         QString file = idx.data(Qt::UserRole+1).toString();
-        QUrl url = QUrl::fromUserInput(file);
+        KUrlCompletion k;
+        QUrl url = QUrl::fromUserInput(k.replacedPath(file));
         debugWelcome<<file<<url;
         if (url.isValid()) {
             KoPart *part = this->part(QStringLiteral("calligraplan"), PLAN_MIME_TYPE);
@@ -325,7 +327,7 @@ void WelcomeView::setProjectTemplatesModel()
 {
     QStandardItemModel *m = new QStandardItemModel(ui.projectTemplates);
     KSharedConfigPtr configPtr = mainWindow()->componentData().config();
-    const QStringList dirs = configPtr->group("Project Templates").readEntry("ProjectTemplatePaths", QStringList());
+    const QStringList dirs = configPtr->group(QStringLiteral("Project Templates")).readEntry("ProjectTemplatePaths", QStringList());
     bool addgroups = dirs.count() > 1;
     ui.projectTemplates->setRootIsDecorated(addgroups);
     for (const QString &path : dirs) {

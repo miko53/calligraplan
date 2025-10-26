@@ -2,6 +2,7 @@
 Type=ServiceType
 X-KDE-ServiceType=Plan/Part
 Comment=Calligra Component
+Comment[ar]=عنصر كاليغرا
 Comment[ca]=Component del Calligra
 Comment[ca@valencia]=Component de Calligra
 Comment[cs]=Komponenta Calligra
@@ -14,6 +15,7 @@ Comment[eu]=Calligra osagaia
 Comment[fi]=Calligra-osa
 Comment[fr]=Composant gestion de projets de Calligra
 Comment[gl]=Compoñente para Calligra.
+Comment[he]=רכיב Calligra
 Comment[ia]=Componente de Calligra
 Comment[id]=Komponen Calligra
 Comment[it]=Componente di Calligra
@@ -28,7 +30,6 @@ Comment[sl]=Calligrina komponenta
 Comment[sv]=Calligra-komponent
 Comment[tr]=Calligra Bileşeni
 Comment[uk]=Компонент Calligra
-Comment[x-test]=xxCalligra Componentxx
 Comment[zh_CN]=Calligra 组件
 Comment[zh_TW]=Calligra 組件
 

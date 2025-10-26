@@ -941,7 +941,7 @@ QVariant ScheduleItemModel::data(const QModelIndex &index, int role) const
             return QVariant();
     }
     if (result.isValid()) {
-        if (role == Qt::DisplayRole && result.type() == QVariant::String && result.toString().isEmpty()) {
+        if (role == Qt::DisplayRole && result.typeId() == QMetaType::QString && result.toString().isEmpty()) {
             // HACK to show focus in empty cells
             result = ' ';
         }
@@ -1278,7 +1278,7 @@ void ScheduleLogItemModel::addLogEntry(const Schedule::Log &log, int /*row*/)
     item->setData(log.severity, SeverityRole);
     lst.append(item);
     lst.append(new QStandardItem(log.message));
-    for (QStandardItem *itm : qAsConst(lst)) {
+    for (QStandardItem *itm : std::as_const(lst)) {
             if (log.resource) {
                 itm->setData(log.resource->id(), IdentityRole);
             } else if (log.node) {

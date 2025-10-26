@@ -112,7 +112,7 @@ inline QString KoStyleStack::property(const QString &nsURI, const QString &name,
     QList<KoXmlElement>::ConstIterator it = m_stack.end();
     while (it != m_stack.begin()) {
         --it;
-        for (const QString &propertyTagName : qAsConst(m_propertiesTagNames)) {
+        for (const QString &propertyTagName : std::as_const(m_propertiesTagNames)) {
             KoXmlElement properties = KoXml::namedItemNS(*it, m_styleNSURI, propertyTagName);
             if (detail) {
                 QString attribute(properties.attributeNS(nsURI, fullName));
@@ -156,7 +156,7 @@ inline bool KoStyleStack::hasProperty(const QString &nsURI, const QString &name,
     QList<KoXmlElement>::ConstIterator it = m_stack.end();
     while (it != m_stack.begin()) {
         --it;
-        for (const QString &propertiesTagName : qAsConst(m_propertiesTagNames)) {
+        for (const QString &propertiesTagName : std::as_const(m_propertiesTagNames)) {
             const KoXmlElement properties = KoXml::namedItemNS(*it, m_styleNSURI, propertiesTagName);
             if (properties.hasAttributeNS(nsURI, name) ||
                     (detail && properties.hasAttributeNS(nsURI, fullName)))
@@ -176,7 +176,7 @@ QPair<qreal,qreal> KoStyleStack::fontSize(const qreal defaultFontPointSize) cons
 
     while (it != m_stack.begin()) {
         --it;
-        for (const QString &propertiesTagName : qAsConst(m_propertiesTagNames)) {
+        for (const QString &propertiesTagName : std::as_const(m_propertiesTagNames)) {
             KoXmlElement properties = KoXml::namedItemNS(*it, m_styleNSURI, propertiesTagName).toElement();
             if (properties.hasAttributeNS(m_foNSURI, name)) {
                 const QString value = properties.attributeNS(m_foNSURI, name, QString());
@@ -186,7 +186,7 @@ QPair<qreal,qreal> KoStyleStack::fontSize(const qreal defaultFontPointSize) cons
                     //first percent definition into account and keep on to seek for a valid parent,
                     //percent *= value.left(value.length() - 1).toDouble() / 100.0;
                     if (percent == 100)
-                        percent = value.leftRef(value.length() - 1).toDouble();
+                        percent = value.left(value.length() - 1).toDouble();
                 } else {
                     // e.g. 12pt and indicate that there was not percentage there
                     return QPair<qreal,qreal> ((percent * KoUnit::parseValue(value))/100.0, 0.0);
@@ -205,7 +205,7 @@ bool KoStyleStack::hasChildNode(const QString &nsURI, const QString &localName) 
     QList<KoXmlElement>::ConstIterator it = m_stack.end();
     while (it != m_stack.begin()) {
         --it;
-        for (const QString &propertiesTagName : qAsConst(m_propertiesTagNames)) {
+        for (const QString &propertiesTagName : std::as_const(m_propertiesTagNames)) {
             KoXmlElement properties = KoXml::namedItemNS(*it, m_styleNSURI, propertiesTagName);
             if (!KoXml::namedItemNS(properties, nsURI, localName).isNull())
                 return true;
@@ -221,7 +221,7 @@ KoXmlElement KoStyleStack::childNode(const QString &nsURI, const QString &localN
 
     while (it != m_stack.begin()) {
         --it;
-        for (const QString &propertiesTagName : qAsConst(m_propertiesTagNames)) {
+        for (const QString &propertiesTagName : std::as_const(m_propertiesTagNames)) {
             KoXmlElement properties = KoXml::namedItemNS(*it, m_styleNSURI, propertiesTagName);
             KoXmlElement e = KoXml::namedItemNS(properties, nsURI, localName);
             if (!e.isNull())

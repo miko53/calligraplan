@@ -363,7 +363,7 @@ ViewListWidget::ViewListWidget(MainDocument *part, QWidget *parent)//QString nam
     
 
     QVBoxLayout *l = new QVBoxLayout(this);
-    l->setMargin(0);
+    l->setContentsMargins(0, 0, 0, 0);
     l->addWidget(m_viewlist);
     l->addWidget(m_currentSchedule);
 
@@ -804,7 +804,7 @@ void ViewListWidget::contextMenuEvent (QContextMenuEvent *event)
     }
     if (! lst.isEmpty()) {
         //menu.addTitle(i18n("Edit"));
-        for (QAction *a : qAsConst(lst)) {
+        for (QAction *a : std::as_const(lst)) {
             menu.addAction(a);
         }
     }

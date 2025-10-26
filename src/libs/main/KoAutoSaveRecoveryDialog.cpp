@@ -71,7 +71,7 @@ public:
         return QList<QWidget*>() << page;
     }
 
-    void updateItemWidgets(const QList<QWidget*> widgets,
+    void updateItemWidgets(const QList<QWidget*> &widgets,
                            const QStyleOptionViewItem &option,
                            const QPersistentModelIndex &index) const override
     {
@@ -218,7 +218,7 @@ KoAutoSaveRecoveryDialog::KoAutoSaveRecoveryDialog(const QStringList &filenames,
 QStringList KoAutoSaveRecoveryDialog::recoverableFiles()
 {
     QStringList files;
-    for (FileItem* fileItem : qAsConst(m_model->m_fileItems)) {
+    for (FileItem* fileItem : std::as_const(m_model->m_fileItems)) {
         if (fileItem->checked) {
             files << fileItem->name;
         }

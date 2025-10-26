@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=CalligraPlanPortfolioPart
+Name[ar]=جزء حافظة مشاريع كاليغرا المُخطِط
 Name[ca]=Part Portfolio del Calligra Plan
 Name[ca@valencia]=Part Portfolio de Calligra Plan
 Name[de]=CalligraPlanPortfolioPart
@@ -10,6 +11,7 @@ Name[es]=CalligraPlanPortfolioPart
 Name[eu]=CalligraPlanPortfolioPart
 Name[fr]=CalligraPlanPortfolioPart
 Name[gl]=CalligraPlanPortfolioPart
+Name[he]=חלק_תיק_תכנון_Calligra
 Name[id]=CalligraPlanPortfolioPart
 Name[it]=CalligraPlanPortfolioPart
 Name[ka]=CalligraPlanPortfolioPart
@@ -22,7 +24,6 @@ Name[sl]=Del portfelja Calligra Plan
 Name[sv]=Calligra Plan-portföljprogramdel
 Name[tr]=CalligraPlanPortfolioPart
 Name[uk]=Модуль портфоліо Calligra Plan
-Name[x-test]=xxCalligraPlanPortfolioPartxx
 Name[zh_CN]=CalligraPlanPortfolioPart
 Icon=calligraplanportfolio
 MimeType=application/x-vnd.kde.plan.portfolio;

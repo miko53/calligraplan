@@ -5,6 +5,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
   <name>Plan Portfolio</name>
+  <name xml:lang="ar">حافظة مشاريع المُخطِط</name>
   <name xml:lang="ca">Plan Portfolio</name>
   <name xml:lang="ca-valencia">Plan Portfolio</name>
   <name xml:lang="cs">Naplánovat portfolio</name>
@@ -22,13 +23,14 @@
   <name xml:lang="nl">Plan Portfolio</name>
   <name xml:lang="pl">Plan Portfolio</name>
   <name xml:lang="pt">Plan Portfolio</name>
+  <name xml:lang="pt-BR">Plan Portfolio</name>
   <name xml:lang="sk">Plan Portfolio</name>
   <name xml:lang="sl">Plan Portfolio</name>
   <name xml:lang="sv">Plan Portfölj</name>
   <name xml:lang="tr">Plan Portföy</name>
   <name xml:lang="uk">Портфоліо Plan</name>
-  <name xml:lang="x-test">xxPlan Portfolioxx</name>
   <summary>Project Portfolio Management</summary>
+  <summary xml:lang="ar">إدارة حافظة المشاريع</summary>
   <summary xml:lang="ca">Gestió de carteres de projectes</summary>
   <summary xml:lang="ca-valencia">Gestió de carteres de projectes</summary>
   <summary xml:lang="cs">Správa projektů portfolia</summary>
@@ -38,7 +40,7 @@
   <summary xml:lang="es">Gestión de portafolios de proyectos</summary>
   <summary xml:lang="fi">Projektin portfolionhallinta</summary>
   <summary xml:lang="fr">Gestionnaire d'un porte-feuille de projets</summary>
-  <summary xml:lang="gl">Xestión de portafolios de proxectos.</summary>
+  <summary xml:lang="gl">Xestión de portafolios de proxectos</summary>
   <summary xml:lang="ia">Administration de Portfolio de projecto</summary>
   <summary xml:lang="id">Pengelolaan Portfolio Proyek</summary>
   <summary xml:lang="it">Gestione del portafoglio dei progetti</summary>
@@ -46,16 +48,17 @@
   <summary xml:lang="nl">Beheer van portfolio met projecten</summary>
   <summary xml:lang="pl">Zarządzanie Portfolio Projektu</summary>
   <summary xml:lang="pt">Gestão de Portfólios de Projectos</summary>
+  <summary xml:lang="pt-BR">Gerenciamento de portfólio de projeto</summary>
   <summary xml:lang="sk">Správa Plan Portfolio</summary>
   <summary xml:lang="sl">Upravljanje portfelja projektov</summary>
   <summary xml:lang="sv">Hantering av projektportfölj</summary>
   <summary xml:lang="tr">Proje Portföy Yönetimi</summary>
   <summary xml:lang="uk">Керування портфоліо проєктів</summary>
-  <summary xml:lang="x-test">xxProject Portfolio Managementxx</summary>
   <description>
     <p>
       Plan Portfolio is a project portfolio management application. It is intended for managing a collection of projects.
     </p>
+    <p xml:lang="ar">حافظة مشاريع المُخطِط هو تطبيق لإدارة محفظة المشاريع. وهو مخصص لإدارة مجموعة من المشاريع.</p>
     <p xml:lang="ca">El Plan Portfolio és una aplicació de gestió d'una cartera de projectes. Està pensada per a gestionar una col·lecció de projectes.</p>
     <p xml:lang="ca-valencia">Plan Portfolio és una aplicació de gestió d'una cartera de projectes. Està pensada per a gestionar una col·lecció de projectes.</p>
     <p xml:lang="en-GB">Plan Portfolio is a project portfolio management application. It is intended for managing a collection of projects.</p>
@@ -70,11 +73,11 @@
     <p xml:lang="nl">Plan Portfolio is een beheertoepassing van projectportfolio's. Het is bedoeld voor het beheren van een verzameling projecten.</p>
     <p xml:lang="pl">Plan Portfolio jest aplikacją do zarządzania Portfolio Projektu. Został pomyślany do zarządzania zbiorami projektów.</p>
     <p xml:lang="pt">O Plan Portfolio é uma aplicação de gestão de portfólios de projectos. Pretende servir para gerir uma colecção de projectos.</p>
+    <p xml:lang="pt-BR">O Plan Portfolio é um aplicativo de gerenciamento de portfólio de projetos. Ele foi criado para gerenciar um conjunto de projetos.</p>
     <p xml:lang="sl">Plan Portfolio je aplikacija za upravljanje portfelja projektov. Namenjena je za upravljanje zbirke projektov.</p>
     <p xml:lang="sv">Plan Portfölj är ett program för hantering av projektportföljer. Det är avsett för att hantera en projektsamling.</p>
     <p xml:lang="tr">Plan Portföy, bir proje portföy yönetimi uygulamasıdır. Bir proje koleksiyonunu yönetmek için tasarlanmıştır.</p>
     <p xml:lang="uk">«Портфоліо Plan» є програмою для керування портфоліо проєктів. Її призначено для керування збірками проєктів.</p>
-    <p xml:lang="x-test">xxPlan Portfolio is a project portfolio management application. It is intended for managing a collection of projects.xx</p>
   </description>
   <url type="homepage">https://www.calligra.org/plan/</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=calligraplan</url>

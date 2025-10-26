@@ -95,7 +95,7 @@ public:
               m_connected(false),
               m_hidden(false) {}
 
-        bool operator==(const StatusBarItem& rhs) {
+        bool operator==(const StatusBarItem& rhs) const {
             return m_widget == rhs.m_widget;
         }
 
@@ -283,7 +283,7 @@ void KoView::dropEvent(QDropEvent *event)
     }
 
     if (!images.isEmpty()) {
-        addImages(images, event->pos());
+        addImages(images, event->position().toPoint());
     }
 }
 
@@ -356,7 +356,7 @@ QPrintDialog *KoView::createPrintDialog(KoPrintJob *printJob, QWidget *parent)
     QPrintDialog *printDialog = new QPrintDialog(&printJob->printer(), parent);
     printDialog->setOptionTabs(printJob->createOptionWidgets());
     printDialog->setMinMax(printJob->printer().fromPage(), printJob->printer().toPage());
-    printDialog->setEnabledOptions(printJob->printDialogOptions());
+    printDialog->setOptions(printJob->printDialogOptions());
     return printDialog;
 }
 
@@ -404,7 +404,7 @@ void KoView::setupGlobalActions()
 
 void KoView::changeAuthorProfile(const QString &profileName)
 {
-    KConfigGroup appAuthorGroup(KSharedConfig::openConfig(), "Author");
+    KConfigGroup appAuthorGroup(KSharedConfig::openConfig(), QStringLiteral("Author"));
     if (profileName.isEmpty()) {
         appAuthorGroup.writeEntry("active-profile", "");
     } else if (profileName == i18nc("choice for author profile", "Anonymous")) {
@@ -463,13 +463,13 @@ void KoView::slotUpdateAuthorProfileActions()
     d->actionAuthor->addAction(i18n("Default Author Profile"));
     d->actionAuthor->addAction(i18nc("choice for author profile", "Anonymous"));
 
-    KConfigGroup authorGroup(KoGlobal::planConfig(), "Author");
+    KConfigGroup authorGroup(KoGlobal::planConfig(), QStringLiteral("Author"));
     const QStringList profiles = authorGroup.readEntry("profile-names", QStringList());
     for (const QString &profile : profiles) {
         d->actionAuthor->addAction(profile);
     }
 
-    KConfigGroup appAuthorGroup(KSharedConfig::openConfig(), "Author");
+    KConfigGroup appAuthorGroup(KSharedConfig::openConfig(), QStringLiteral("Author"));
     QString profileName = appAuthorGroup.readEntry("active-profile", "");
     if (profileName == QStringLiteral("anonymous")) {
         d->actionAuthor->setCurrentItem(1);

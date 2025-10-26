@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Basic project
+Name[ar]=مشروع أساسي
 Name[ca]=Projecte bàsic
 Name[ca@valencia]=Projecte bàsic
 Name[cs]=Základní projekt
@@ -12,6 +13,7 @@ Name[eu]=Oinarrizko proiektua
 Name[fi]=Perusprojekti
 Name[fr]=Projet de base
 Name[gl]=Proxecto básico
+Name[he]=מיזם בסיסי
 Name[ia]=Projecto basic
 Name[id]=Projek dasar
 Name[it]=Progetto di base
@@ -26,7 +28,6 @@ Name[sl]=Osnovni projekt
 Name[sv]=Grundprojekt
 Name[tr]=Yalın proje
 Name[uk]=Базовий проєкт
-Name[x-test]=xxBasic projectxx
 Name[zh_CN]=基本项目
 Name[zh_TW]=基礎專案
 Type=Link

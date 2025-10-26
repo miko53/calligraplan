@@ -4,6 +4,7 @@
             {
                 "Email": "calligra_devel@kde.org",
                 "Name": "Calligra Team",
+                "Name[ar]": "فريق كاليغرا",
                 "Name[ca@valencia]": "Equip de Calligra",
                 "Name[ca]": "Equip del Calligra",
                 "Name[cs]": "Team Calligra",
@@ -32,7 +33,6 @@
                 "Name[sv]": "Calligra-gruppen",
                 "Name[tr]": "Calligra Takımı",
                 "Name[uk]": "Команда розробників Calligra",
-                "Name[x-test]": "xxCalligra Teamxx",
                 "Name[zh_CN]": "Calligra 团队",
                 "Name[zh_TW]": "Calligra 團隊"
             }
@@ -40,6 +40,7 @@
         "Category": "",
         "Dependencies": [],
         "Description": "Text element for Reports",
+        "Description[ar]": "عنصر نص للتقارير",
         "Description[ca@valencia]": "Element de text per a informes",
         "Description[ca]": "Element de text per a informes",
         "Description[cs]": "Textové prvky pro hlášení",
@@ -67,7 +68,6 @@
         "Description[sv]": "Textelement för rapporter",
         "Description[tr]": "Raporlar için metin ögesi",
         "Description[uk]": "Елемент тексту для звітів",
-        "Description[x-test]": "xxText element for Reportsxx",
         "Description[zh_CN]": "Reports 的文本元素",
         "Description[zh_TW]": "報告用的文字元素",
         "EnabledByDefault": true,
@@ -75,6 +75,7 @@
         "Id": "org.kde.kreport.plan.text",
         "License": "LGPL",
         "Name": "Text",
+        "Name[ar]": "نص",
         "Name[ca@valencia]": "Text",
         "Name[ca]": "Text",
         "Name[cs]": "Text",
@@ -102,7 +103,6 @@
         "Name[sv]": "Text",
         "Name[tr]": "Metin",
         "Name[uk]": "Текст",
-        "Name[x-test]": "xxTextxx",
         "Name[zh_CN]": "文本",
         "Name[zh_TW]": "文字",
         "ServiceTypes": [

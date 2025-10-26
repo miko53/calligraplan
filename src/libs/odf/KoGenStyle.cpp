@@ -19,10 +19,10 @@
 #include <OdfDebug.h>
 
 // Returns -1, 0 (equal) or 1
-static int compareMap(const QMap<QString, QString>& map1, const QMap<QString, QString>& map2)
+static int compareMap(const QMultiMap<QString, QString>& map1, const QMultiMap<QString, QString>& map2)
 {
-    QMap<QString, QString>::const_iterator it = map1.constBegin();
-    QMap<QString, QString>::const_iterator oit = map2.constBegin();
+    QMultiMap<QString, QString>::const_iterator it = map1.constBegin();
+    QMultiMap<QString, QString>::const_iterator oit = map2.constBegin();
     for (; it != map1.constEnd(); ++it, ++oit) {   // both maps have been checked for size already
         if (it.key() != oit.key())
             return it.key() < oit.key() ? -1 : + 1;
@@ -157,14 +157,14 @@ void KoGenStyle::writeStyleProperties(KoXmlWriter* writer, PropertyType type,
     const StyleMap& mapChild = m_childProperties[type];
     if (!map.isEmpty() || !mapChild.isEmpty()) {
         writer->startElement(elementName);
-        QMap<QString, QString>::const_iterator it = map.constBegin();
-        const QMap<QString, QString>::const_iterator end = map.constEnd();
+        QMultiMap<QString, QString>::const_iterator it = map.constBegin();
+        const QMultiMap<QString, QString>::const_iterator end = map.constEnd();
         for (; it != end; ++it) {
             if (!parentStyle || parentStyle->property(it.key(), type) != it.value())
                 writer->addAttribute(it.key().toUtf8().constData(), it.value().toUtf8());
         }
-        QMap<QString, QString>::const_iterator itChild = mapChild.constBegin();
-        const QMap<QString, QString>::const_iterator endChild = mapChild.constEnd();
+        QMultiMap<QString, QString>::const_iterator itChild = mapChild.constBegin();
+        const QMultiMap<QString, QString>::const_iterator endChild = mapChild.constEnd();
         for (; itChild != endChild; ++itChild) {
             if (!parentStyle || parentStyle->childProperty(itChild.key(), type) != itChild.value())
                 writer->addCompleteElement(itChild.value().toUtf8().constData());
@@ -221,7 +221,7 @@ void KoGenStyle::writeStyle(KoXmlWriter* writer, const KoGenStyles& styles, cons
     // We only look at the direct parent style because we assume
     // that styles are fully specified, i.e. the inheritance is
     // only in the final file, not in the caller's code.
-    QMap<QString, QString>::const_iterator it = m_attributes.constBegin();
+    QMultiMap<QString, QString>::const_iterator it = m_attributes.constBegin();
     for (; it != m_attributes.constEnd(); ++it) {
         bool writeit = true;
         if (parentStyle && it.key() != QStringLiteral("style:family")  // always write the family out
@@ -290,7 +290,7 @@ void KoGenStyle::writeStyle(KoXmlWriter* writer, const KoGenStyles& styles, cons
             writeit = false;
         if (writeit) {
             writer->startElement("style:map");
-            QMap<QString, QString>::const_iterator it = m_maps[i].constBegin();
+            QMultiMap<QString, QString>::const_iterator it = m_maps[i].constBegin();
             for (; it != m_maps[i].constEnd(); ++it) {
                 writer->addAttribute(it.key().toUtf8().constData(), it.value().toUtf8());
             }
@@ -371,7 +371,7 @@ void KoGenStyle::addAttributePercent(const QString &attrName, int value)
     addAttribute(attrName, str.data());
 }
 
-void KoGenStyle::addStyleMap(const QMap<QString, QString>& styleMap)
+void KoGenStyle::addStyleMap(const QMultiMap<QString, QString>& styleMap)
 {
     // check, if already present
     for (int i = 0 ; i < m_maps.count() ; ++i) {
@@ -390,37 +390,37 @@ void KoGenStyle::printDebug() const
 {
     int i = DefaultType;
     debugOdf << m_properties[i].count() << " properties.";
-    for (QMap<QString, QString>::ConstIterator it = m_properties[i].constBegin(); it != m_properties[i].constEnd(); ++it) {
+    for (QMultiMap<QString, QString>::ConstIterator it = m_properties[i].constBegin(); it != m_properties[i].constEnd(); ++it) {
         debugOdf << "" << it.key() << " =" << it.value();
     }
     i = TextType;
     debugOdf << m_properties[i].count() << " text properties.";
-    for (QMap<QString, QString>::ConstIterator it = m_properties[i].constBegin(); it != m_properties[i].constEnd(); ++it) {
+    for (QMultiMap<QString, QString>::ConstIterator it = m_properties[i].constBegin(); it != m_properties[i].constEnd(); ++it) {
         debugOdf << "" << it.key() << " =" << it.value();
     }
     i = ParagraphType;
     debugOdf << m_properties[i].count() << " paragraph properties.";
-    for (QMap<QString, QString>::ConstIterator it = m_properties[i].constBegin(); it != m_properties[i].constEnd(); ++it) {
+    for (QMultiMap<QString, QString>::ConstIterator it = m_properties[i].constBegin(); it != m_properties[i].constEnd(); ++it) {
         debugOdf << "" << it.key() << " =" << it.value();
     }
     i = TextType;
     debugOdf << m_childProperties[i].count() << " text child elements.";
-    for (QMap<QString, QString>::ConstIterator it = m_childProperties[i].constBegin(); it != m_childProperties[i].constEnd(); ++it) {
+    for (QMultiMap<QString, QString>::ConstIterator it = m_childProperties[i].constBegin(); it != m_childProperties[i].constEnd(); ++it) {
         debugOdf << "" << it.key() << " =" << it.value();
     }
     i = ParagraphType;
     debugOdf << m_childProperties[i].count() << " paragraph child elements.";
-    for (QMap<QString, QString>::ConstIterator it = m_childProperties[i].constBegin(); it != m_childProperties[i].constEnd(); ++it) {
+    for (QMultiMap<QString, QString>::ConstIterator it = m_childProperties[i].constBegin(); it != m_childProperties[i].constEnd(); ++it) {
         debugOdf << "" << it.key() << " =" << it.value();
     }
     debugOdf << m_attributes.count() << " attributes.";
-    for (QMap<QString, QString>::ConstIterator it = m_attributes.constBegin(); it != m_attributes.constEnd(); ++it) {
+    for (QMultiMap<QString, QString>::ConstIterator it = m_attributes.constBegin(); it != m_attributes.constEnd(); ++it) {
         debugOdf << "" << it.key() << " =" << it.value();
     }
     debugOdf << m_maps.count() << " maps.";
     for (int i = 0; i < m_maps.count(); ++i) {
         debugOdf << "map" << i << ":";
-        for (QMap<QString, QString>::ConstIterator it = m_maps[i].constBegin(); it != m_maps[i].constEnd(); ++it) {
+        for (QMultiMap<QString, QString>::ConstIterator it = m_maps[i].constBegin(); it != m_maps[i].constEnd(); ++it) {
             debugOdf << "" << it.key() << " =" << it.value();
         }
     }
@@ -522,8 +522,8 @@ void KoGenStyle::copyPropertiesFromStyle(const KoGenStyle &sourceStyle, KoGenSty
 
     const StyleMap& map = sourceStyle.m_properties[type];
     if (!map.isEmpty()) {
-        QMap<QString, QString>::const_iterator it = map.constBegin();
-        const QMap<QString, QString>::const_iterator end = map.constEnd();
+        QMultiMap<QString, QString>::const_iterator it = map.constBegin();
+        const QMultiMap<QString, QString>::const_iterator end = map.constEnd();
         for (; it != end; ++it) {
             targetStyle.addProperty(it.key(), it.value(), type);
         }

@@ -52,7 +52,7 @@
 #include <KDialogJobUiDelegate>
 
 #ifdef HAVE_KACTIVITIES
-#include <KActivities/ResourceInstance>
+#include <PlasmaActivities/ResourceInstance>
 #endif
 
 //   // qt includes
@@ -64,7 +64,7 @@
 #include <QTabBar>
 #include <QPrinter>
 #include <QPrintDialog>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QPrintPreviewDialog>
 #include <QCloseEvent>
 #include <QPointer>
@@ -120,9 +120,6 @@ public:
         dockWidgetMenu = nullptr;
         deferredClosingEvent = nullptr;
         blockClose = false;
-#ifdef HAVE_KACTIVITIES
-        activityResource = nullptr;
-#endif
 
         m_helpMenu = nullptr;
 
@@ -225,9 +222,6 @@ public:
     QCloseEvent *deferredClosingEvent;
     bool blockClose;
 
-#ifdef HAVE_KACTIVITIES
-    KActivities::ResourceInstance *activityResource;
-#endif
 
     KoComponentData componentData;
 
@@ -348,7 +342,7 @@ KoMainWindow::KoMainWindow(const QByteArray &nativeMimeType, const KoComponentDa
     connect(d->toggleDockers, &QAction::toggled, this, &KoMainWindow::toggleDockersVisibility);
 
     d->toggleDockerTitleBars = new KToggleAction(i18nc("@action:inmenu", "Show Docker Titlebars"), this);
-    KConfigGroup configGroupInterface =  KSharedConfig::openConfig()->group("Interface");
+    KConfigGroup configGroupInterface =  KSharedConfig::openConfig()->group(QStringLiteral("Interface"));
     d->toggleDockerTitleBars->setChecked(configGroupInterface.readEntry("ShowDockerTitleBars", true));
     d->toggleDockerTitleBars->setVisible(false);
     actionCollection()->addAction(QStringLiteral("view_toggledockertitlebars"), d->toggleDockerTitleBars);
@@ -363,7 +357,7 @@ KoMainWindow::KoMainWindow(const QByteArray &nativeMimeType, const KoComponentDa
     d->mainWindowGuiIsBuilt = true;
 
     // we first figure out some good default size and restore the x,y position. See bug 285804Z.
-    KConfigGroup cfg(KSharedConfig::openConfig(), "MainWindow");
+    KConfigGroup cfg(KSharedConfig::openConfig(), QStringLiteral("MainWindow"));
     QByteArray geom = QByteArray::fromBase64(cfg.readEntry("ko_geometry", QByteArray()));
     if (!restoreGeometry(geom)) {
         // TODO: Handle multiple monitors
@@ -404,7 +398,7 @@ void KoMainWindow::setNoCleanup(bool noCleanup)
 
 KoMainWindow::~KoMainWindow()
 {
-    KConfigGroup cfg(KSharedConfig::openConfig(), "MainWindow");
+    KConfigGroup cfg(KSharedConfig::openConfig(), QStringLiteral("MainWindow"));
     cfg.writeEntry("ko_geometry", saveGeometry().toBase64());
     cfg.writeEntry("ko_windowstate", saveState().toBase64());
 
@@ -469,7 +463,7 @@ void KoMainWindow::setRootDocument(KoDocument *doc, KoPart *part, bool deletePre
         // Hide all dockwidgets and remember their old state
         d->dockWidgetVisibilityMap.clear();
 
-        for (QDockWidget* dockWidget : qAsConst(d->dockWidgetsMap)) {
+        for (QDockWidget* dockWidget : std::as_const(d->dockWidgetsMap)) {
             d->dockWidgetVisibilityMap.insert(dockWidget, dockWidget->isVisible());
             dockWidget->setVisible(false);
         }
@@ -543,7 +537,7 @@ void KoMainWindow::setRootDocument(KoDocument *doc, KoPart *part, bool deletePre
     }
 
     if (doc && !d->dockWidgetVisibilityMap.isEmpty()) {
-        for (QDockWidget* dockWidget : qAsConst(d->dockWidgetsMap)) {
+        for (QDockWidget* dockWidget : std::as_const(d->dockWidgetsMap)) {
             dockWidget->setVisible(d->dockWidgetVisibilityMap.value(dockWidget));
         }
     }
@@ -610,10 +604,7 @@ void KoMainWindow::addRecentURL(const QString &projectName, const QUrl &url)
         saveRecentFiles();
 
 #ifdef HAVE_KACTIVITIES
-        if (!d->activityResource) {
-            d->activityResource = new KActivities::ResourceInstance(winId(), this);
-        }
-        d->activityResource->setUri(url);
+        KActivities::ResourceInstance::notifyAccessed(url);
 #endif
     }
 }
@@ -984,7 +975,7 @@ bool KoMainWindow::saveDocumentInternal(bool saveas, bool silent, int specialOut
         // Not been saved yet, but there is a default url so open dialog with this url
         if (suggestedURL.path() == suggestedURL.fileName()) {
             // only a filename has been given, so add the default dir
-            KConfigGroup group =  KSharedConfig::openConfig()->group("File Dialogs");
+            KConfigGroup group =  KSharedConfig::openConfig()->group(QStringLiteral("File Dialogs"));
             QString path = group.readEntry("SaveDocument");
             path += QLatin1Char('/') + suggestedURL.fileName();
             suggestedURL.setPath(path);
@@ -1184,7 +1175,7 @@ void KoMainWindow::closeEvent(QCloseEvent *e)
             return;
         setRootDocument(nullptr);
         if (!d->dockWidgetVisibilityMap.isEmpty()) { // re-enable dockers for persistency
-            for (QDockWidget* dockWidget : qAsConst(d->dockWidgetsMap))
+            for (QDockWidget* dockWidget : std::as_const(d->dockWidgetsMap))
                 dockWidget->setVisible(d->dockWidgetVisibilityMap.value(dockWidget));
         }
     } else {
@@ -1201,7 +1192,7 @@ void KoMainWindow::saveWindowSettings()
         // Save window size into the config file of our componentData
         // TODO: check if this is ever read again, seems lost over the years
         debugMain;
-        KConfigGroup mainWindowConfigGroup = config->group("MainWindow");
+        KConfigGroup mainWindowConfigGroup = config->group(QStringLiteral("MainWindow"));
         KWindowConfig::saveWindowSize(windowHandle(), mainWindowConfigGroup);
         config->sync();
         d->windowSizeDirty = false;
@@ -1520,7 +1511,7 @@ KoPrintJob* KoMainWindow::printPreviewToPdf()
         if (pDoc && pDoc->url().isValid()) {
             auto startUrl = pDoc->url();
             QString fileName = startUrl.fileName();
-            pdfFileName = fileName.replace(QRegExp(QStringLiteral("\\.\\w{2,5}$"), Qt::CaseInsensitive), QStringLiteral(".pdf"));
+            pdfFileName = fileName.replace(QRegularExpression(QStringLiteral("\\.\\w{2,5}$"), QRegularExpression::CaseInsensitiveOption), QStringLiteral(".pdf"));
         }
     }
     pdfFileName = QStringLiteral("%1/%2").arg(dir.path()).arg(pdfFileName);
@@ -1579,7 +1570,7 @@ KoPrintJob* KoMainWindow::exportToPdf(const QString &_pdfFileName)
     QString pdfFileName = _pdfFileName;
 
     if (pdfFileName.isEmpty()) {
-        KConfigGroup group =  KSharedConfig::openConfig()->group("File Dialogs");
+        KConfigGroup group =  KSharedConfig::openConfig()->group(QStringLiteral("File Dialogs"));
         QString defaultDir = group.readEntry("SavePdfDialog");
         if (defaultDir.isEmpty())
             defaultDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
@@ -1589,7 +1580,7 @@ KoPrintJob* KoMainWindow::exportToPdf(const QString &_pdfFileName)
         if (pDoc && pDoc->url().isValid()) {
             startUrl = pDoc->url();
             QString fileName = startUrl.fileName();
-            fileName = fileName.replace(QRegExp(QStringLiteral("\\.\\w{2,5}$"), Qt::CaseInsensitive), QStringLiteral(".pdf"));
+            fileName = fileName.replace(QRegularExpression(QStringLiteral("\\.\\w{2,5}$"), QRegularExpression::CaseInsensitiveOption), QStringLiteral(".pdf"));
             startUrl = startUrl.adjusted(QUrl::RemoveFilename);
             startUrl.setPath(startUrl.path() +  fileName);
         }
@@ -1977,7 +1968,7 @@ QDockWidget* KoMainWindow::createDockWidget(KoDockFactoryBase* factory)
             titleBar->setLocked(true);
 
         if (titleBar) {
-            KConfigGroup configGroupInterface =  KSharedConfig::openConfig()->group("Interface");
+            KConfigGroup configGroupInterface =  KSharedConfig::openConfig()->group(QStringLiteral("Interface"));
             titleBar->setVisible(configGroupInterface.readEntry("ShowDockerTitleBars", true));
         }
 
@@ -2016,7 +2007,7 @@ QList<QDockWidget*> KoMainWindow::dockWidgets() const
 
     QList<KoCanvasObserverBase*> observers;
 
-    for (QDockWidget *docker : qAsConst(dockWidgets())) {
+    for (QDockWidget *docker : std::as_const(dockWidgets())) {
         KoCanvasObserverBase *observer = dynamic_cast<KoCanvasObserverBase*>(docker);
         if (observer) {
             observers << observer;
@@ -2073,7 +2064,8 @@ void KoMainWindow::newView()
 void KoMainWindow::createMainwindowGUI()
 {
     if (isHelpMenuEnabled() && !d->m_helpMenu) {
-        d->m_helpMenu = new KHelpMenu(this, componentData().aboutData(), true);
+        d->m_helpMenu = new KHelpMenu(this, componentData().aboutData());
+        d->m_helpMenu->setShowWhatsThis(true);
 
         KActionCollection *actions = actionCollection();
         QAction *helpContentsAction = d->m_helpMenu->action(KHelpMenu::menuHelpContents);
@@ -2192,9 +2184,9 @@ void KoMainWindow::setActivePart(KoPart *part, QWidget *widget)
         // Position and show toolbars according to user's preference
         setAutoSaveSettings(newPart->componentData().componentName(), false);
 
-        KConfigGroup configGroupInterface =  KSharedConfig::openConfig()->group("Interface");
+        KConfigGroup configGroupInterface =  KSharedConfig::openConfig()->group(QStringLiteral("Interface"));
         const bool showDockerTitleBar = configGroupInterface.readEntry("ShowDockerTitleBars", true);
-        for (QDockWidget *wdg : qAsConst(d->dockWidgets)) {
+        for (QDockWidget *wdg : std::as_const(d->dockWidgets)) {
             if ((wdg->features() & QDockWidget::DockWidgetClosable) == 0) {
                 if (wdg->titleBarWidget()) {
                     wdg->titleBarWidget()->setVisible(showDockerTitleBar);
@@ -2253,7 +2245,7 @@ void KoMainWindow::showDockerTitleBars(bool show)
         }
     }
 
-    KConfigGroup configGroupInterface =  KSharedConfig::openConfig()->group("Interface");
+    KConfigGroup configGroupInterface =  KSharedConfig::openConfig()->group(QStringLiteral("Interface"));
     configGroupInterface.writeEntry("ShowDockerTitleBars", show);
 }
 

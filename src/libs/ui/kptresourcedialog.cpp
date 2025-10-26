@@ -305,7 +305,7 @@ ResourceDialog::ResourceDialog(Project &project, Resource *resource, QWidget *pa
     connect(dia, &ResourceDialogImpl::calculate, this, &ResourceDialog::slotCalculationNeeded);
     connect(dia->calendarList, SIGNAL(activated(int)), SLOT(slotCalendarChanged(int)));
     connect(dia->required, SIGNAL(changed()), SLOT(enableButtonOk()));
-    connect(dia->account, SIGNAL(currentIndexChanged(QString)), SLOT(slotAccountChanged(QString)));
+    connect(dia->account, &QComboBox::currentTextChanged, this, &ResourceDialog::slotAccountChanged);
     
     connect(&project, &Project::resourceToBeRemoved, this, &ResourceDialog::slotResourceRemoved);
 }
@@ -351,7 +351,7 @@ void ResourceDialog::slotOk()
     ResourceItemSFModel *m = static_cast<ResourceItemSFModel*>(dia->required->model());
     QStringList lst;
     const auto indexes = dia->required->currentIndexes();
-    for (const QModelIndex &i : indexes) {
+    for (const QPersistentModelIndex &i : indexes) {
         Resource *r = m->resource(i);
         if (r) lst << r->id();
     }
